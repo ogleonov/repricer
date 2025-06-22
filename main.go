@@ -96,7 +96,7 @@ func main() {
 				log.Printf("ТРЕБУЕТСЯ КОРРЕКТИРОВКА: Финальная цена %.2f вне диапазона [%.2f, %.2f]",
 					finalPrice, minPrice, minPrice+1)
 
-				newPrice, newDiscount := calculateNewPrice(price, sellerDiscount, wbDiscount, walletDiscount, minPrice, finalPrice)
+				newPrice, newDiscount := findOptimalPrice(price, sellerDiscount, wbDiscount, walletDiscount, minPrice)
 				err = updateProductPrice(nmId, newPrice, newDiscount)
 				if err != nil {
 					log.Printf("Ошибка обновления цены для товара %d: %v", nmId, err)
@@ -235,109 +235,54 @@ func calculateFinalPrice(price float64, sellerDiscount, wbDiscount, walletDiscou
 	return math.Round(finalPrice*100) / 100
 }
 
-// Расчет новых параметров цены (все скидки целые)
-func calculateNewPrice(currentPrice float64, currentDiscount, wbDiscount, walletDiscount int, minPrice, currentFinal float64) (float64, int) {
-	// Если цена уже в допустимом диапазоне - оставляем как есть
-	if currentFinal >= minPrice && currentFinal <= minPrice+1 {
-		return currentPrice, currentDiscount
-	}
+// Поиск оптимальной цены и скидки для достижения целевой цены
+func findOptimalPrice(currentPrice float64, currentDiscount, wbDiscount, walletDiscount int, minPrice float64) (float64, int) {
+	// Целевая итоговая цена (ровно minPrice)
+	targetPrice := minPrice
 
-	// Определяем направление корректировки
-	if currentFinal < minPrice {
-		return adjustPriceUp(currentPrice, currentDiscount, wbDiscount, walletDiscount, minPrice)
-	} else {
-		return adjustPriceDown(currentPrice, currentDiscount, wbDiscount, walletDiscount, minPrice)
-	}
-}
+	// Начальные значения для подбора
+	bestPrice := currentPrice
+	bestDiscount := currentDiscount
+	bestDiff := math.Abs(calculateFinalPrice(currentPrice, currentDiscount, wbDiscount, walletDiscount) - targetPrice)
 
-// Корректировка при цене ниже минимальной
-func adjustPriceUp(currentPrice float64, currentDiscount, wbDiscount, walletDiscount int, minPrice float64) (float64, int) {
-	// Пытаемся уменьшить скидку продавца
-	if currentDiscount > 0 {
-		// Рассчитываем минимально необходимую цену после скидок
-		requiredPriceAfterWB := minPrice / (1 - float64(walletDiscount)/100)
-		requiredPriceAfterSeller := requiredPriceAfterWB / (1 - float64(wbDiscount)/100)
+	// Диапазоны для подбора
+	priceAdjustment := 30.0  // ±30 рублей
+	discountAdjustment := 30 // ±30%
 
-		// Рассчитываем новую скидку (целое число)
-		newDiscount := int(math.Round(100 * (1 - requiredPriceAfterSeller/currentPrice)))
-		if newDiscount < 0 {
-			newDiscount = 0
-		}
+	// Перебираем комбинации цены и скидки
+	for priceOffset := -priceAdjustment; priceOffset <= priceAdjustment; priceOffset += 1.0 {
+		for discountOffset := -discountAdjustment; discountOffset <= discountAdjustment; discountOffset++ {
+			// Рассчитываем новые значения
+			newPrice := math.Max(1, currentPrice+priceOffset)
+			newDiscount := currentDiscount + discountOffset
 
-		// Проверяем результат
-		newFinal := calculateFinalPrice(currentPrice, newDiscount, wbDiscount, walletDiscount)
-		if newFinal >= minPrice && newFinal <= minPrice+1 {
-			return currentPrice, newDiscount
-		}
-	}
-
-	// Рассчитываем требуемую базовую цену
-	requiredPriceAfterWB := minPrice / (1 - float64(walletDiscount)/100)
-	requiredPriceAfterSeller := requiredPriceAfterWB / (1 - float64(wbDiscount)/100)
-	newPrice := math.Ceil(requiredPriceAfterSeller)
-
-	// Ищем минимальную цену, при которой финальная цена в диапазоне [minPrice, minPrice+1]
-	for {
-		// Используем 0 скидку (целое число)
-		finalPrice := calculateFinalPrice(newPrice, 0, wbDiscount, walletDiscount)
-		if finalPrice >= minPrice && finalPrice <= minPrice+1 {
-			return newPrice, 0
-		}
-		newPrice += 1
-	}
-}
-
-// Корректировка при цене выше минимальной
-func adjustPriceDown(currentPrice float64, currentDiscount, wbDiscount, walletDiscount int, minPrice float64) (float64, int) {
-	// Пытаемся увеличить скидку продавца (целыми шагами)
-	if currentDiscount < 100 {
-		// Начинаем с текущей скидки
-		newDiscount := currentDiscount
-
-		// Постепенно увеличиваем скидку (целыми значениями)
-		for newDiscount <= 100 {
-			newDiscount += 1
-			newFinal := calculateFinalPrice(currentPrice, newDiscount, wbDiscount, walletDiscount)
-
-			// Если достигли целевого диапазона
-			if newFinal >= minPrice && newFinal <= minPrice+1 {
-				return currentPrice, newDiscount
+			// Проверяем допустимость скидки
+			if newDiscount < 0 || newDiscount > 100 {
+				continue
 			}
 
-			// Если перешли ниже минималки - откатываем на шаг и используем
-			if newFinal < minPrice {
-				newDiscount -= 1
-				newFinal = calculateFinalPrice(currentPrice, newDiscount, wbDiscount, walletDiscount)
-				if newFinal >= minPrice {
-					return currentPrice, newDiscount
+			// Рассчитываем итоговую цену
+			finalPrice := calculateFinalPrice(newPrice, newDiscount, wbDiscount, walletDiscount)
+			diff := math.Abs(finalPrice - targetPrice)
+
+			// Если нашли лучшее совпадение
+			if diff < bestDiff {
+				bestPrice = newPrice
+				bestDiscount = newDiscount
+				bestDiff = diff
+
+				// Если достигли идеального совпадения - сразу возвращаем
+				if diff < 0.01 {
+					return bestPrice, bestDiscount
 				}
-				break
 			}
 		}
 	}
 
-	// Если не получилось решить скидкой, понижаем базовую цену
-	newPrice := currentPrice
-	for {
-		newPrice -= 1
-		if newPrice < 1 {
-			return currentPrice, currentDiscount // Защита от отрицательных цен
-		}
-
-		// Рассчитываем финальную цену с текущей скидкой
-		finalPrice := calculateFinalPrice(newPrice, currentDiscount, wbDiscount, walletDiscount)
-
-		if finalPrice >= minPrice && finalPrice <= minPrice+1 {
-			return newPrice, currentDiscount
-		}
-
-		// Если цена опустилась ниже минимальной - переключаемся на режим повышения
-		if finalPrice < minPrice {
-			return adjustPriceUp(newPrice, currentDiscount, wbDiscount, walletDiscount, minPrice)
-		}
-	}
+	return bestPrice, bestDiscount
 }
 
+// Обновление цены товара
 func updateProductPrice(nmId int, newPrice float64, newDiscount int) error {
 	url := "https://discounts-prices.wildberries.ru/ns/dp-api/discounts-prices/suppliers/api/v1/nm/upload/task?checkChange=true"
 
