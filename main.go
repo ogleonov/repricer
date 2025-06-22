@@ -237,17 +237,15 @@ func calculateFinalPrice(price float64, sellerDiscount, wbDiscount, walletDiscou
 
 // Поиск оптимальной цены и скидки для достижения целевой цены
 func findOptimalPrice(currentPrice float64, currentDiscount, wbDiscount, walletDiscount int, minPrice float64) (float64, int) {
-	// Целевая итоговая цена (ровно minPrice)
-	targetPrice := minPrice
+	const (
+		priceAdjustment    = 30.0 // ±30 рублей
+		discountAdjustment = 30   // ±30%
+	)
 
-	// Начальные значения для подбора
+	// Инициализация для поиска лучшего варианта
 	bestPrice := currentPrice
 	bestDiscount := currentDiscount
-	bestDiff := math.Abs(calculateFinalPrice(currentPrice, currentDiscount, wbDiscount, walletDiscount) - targetPrice)
-
-	// Диапазоны для подбора
-	priceAdjustment := 30.0  // ±30 рублей
-	discountAdjustment := 30 // ±30%
+	bestDiff := math.MaxFloat64
 
 	// Перебираем комбинации цены и скидки
 	for priceOffset := -priceAdjustment; priceOffset <= priceAdjustment; priceOffset += 1.0 {
@@ -263,20 +261,28 @@ func findOptimalPrice(currentPrice float64, currentDiscount, wbDiscount, walletD
 
 			// Рассчитываем итоговую цену
 			finalPrice := calculateFinalPrice(newPrice, newDiscount, wbDiscount, walletDiscount)
-			diff := math.Abs(finalPrice - targetPrice)
 
-			// Если нашли лучшее совпадение
+			// Если цена ниже минимальной - пропускаем
+			if finalPrice < minPrice {
+				continue
+			}
+
+			// Рассчитываем разницу с минимальной ценой
+			diff := finalPrice - minPrice
+
+			// Если нашли более близкий вариант к минимальной цене
 			if diff < bestDiff {
 				bestPrice = newPrice
 				bestDiscount = newDiscount
 				bestDiff = diff
-
-				// Если достигли идеального совпадения - сразу возвращаем
-				if diff < 0.01 {
-					return bestPrice, bestDiscount
-				}
 			}
 		}
+	}
+
+	// Если не нашли ни одного варианта выше минимальной цены
+	if bestDiff == math.MaxFloat64 {
+		log.Println("Не удалось найти вариант выше минимальной цены. Используем текущие значения.")
+		return currentPrice, currentDiscount
 	}
 
 	return bestPrice, bestDiscount
