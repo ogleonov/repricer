@@ -14,20 +14,26 @@ import (
 
 // Конфигурация программы
 var (
-	walletAuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTA1MDcxMDIsInVzZXIiOiIxNjI0MjYyNCIsInNoYXJkX2tleSI6IjUiLCJjbGllbnRfaWQiOiJ3YiIsInNlc3Npb25faWQiOiI5MzI5OTcyNmVjMDg0ZWQ2OTgwOTk3NjFkOWJlOTVlYiIsInZhbGlkYXRpb25fa2V5IjoiOTAyY2FjM2I3MzM0MGRlZDE0ZjJjYjhmOWVhOWViMjcyY2I5M2UwZjg4ODk1MzRjZDU1MzQyMTA2M2Y2NTdjNyIsInBob25lIjoiTVhDNGVwdXVNMjVGeXY5RllaNXdqQT09IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzU0MTM4NTYsInZlcnNpb24iOjJ9.Sxs47unFGDC1gF4l7hUdN8ekkulA9CwO5wB3XnKXPycnTSr5gvisM6InGvrdkhad4n0kR9E960XMmzohz9HahMEcdYXlFM1annlpkUd-aEMYODrrxW3nVUTs1BCw3j2LLvQjIO31uh3I_1ou0sf4ue6HxZINnqQc1SJ-oumkyRrEWeGcWttou1Y50vnoeGhsYWnNFlW9dnPotyA_TT3K4GAEZ3zPjF5yKdeA7Iz86-vovHtWEZJ1XyyRb5F2byuS6iGCbq800o-bNkt0eq2MqqLzGb4FJkZPfxoxLWU47AOt1vEBsDuYR3UujulMpr9-QuZNnruZ1QpnO02TjH2ZQw"
-	sellerAuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NDgxMTE4MjEsInVzZXIiOiIxNjI0MjYyNCIsInNoYXJkX2tleSI6IjUiLCJjbGllbnRfaWQiOiJzZWxsZXItcG9ydGFsIiwic2Vzc2lvbl9pZCI6IjdiMmJlMjM0YTM1ODQ0YzlhMjYwMDRmMWJjZGYyNmU4IiwidmFsaWRhdGlvbl9rZXkiOiI5MDJjYWMzYjczMzQwZGVkMTRmMmNiOGY5ZWE5ZWIyNzJjYjkzZTBmODg4OTUzNGNkNTUzNDIxMDYzZjY1N2M3IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzU0MTM4NTYsInZlcnNpb24iOjJ9.KSymBS2fwIyI4Q3MFaJYPKQnAvkeh2ghCHHWkemi4iNyfrR6ucBEgha5M4gly51e4OyjTkHUu4eeeJqBtQFvJ9xjp3UcNMUKoIKmGCAbwt1vi4474GFjQEEFiobi9DoEGTQGh0qniXC9V-vEDxyeEpKpsmN167qimwmWLUzJW2J7OufG7Bm4lSOikbDAO7zJmLw0jcO9WiEdED24SoayshOlxLruTdAmKvNQiG_weFmrbp_WeVNP4imSKNBXUieVSd4QFwkfGDn4GKoNzSBbZmM-6TWDbSdcoL7omVPREaRkGNdKB3Z9ptXcSwi07VTf0WnRQiSM7mGyZG29ttbYrA"
-	sellerWbxKey    = "a4aeb81b-3aea-4bca-a373-b724a179a919"
-
+	walletAuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTEyNzgyMjksInVzZXIiOiIzNDE2NDgyMiIsInNoYXJkX2tleSI6IjkiLCJjbGllbnRfaWQiOiJ3YiIsInNlc3Npb25faWQiOiIzODM5NWQ5NDA5MDE0YTM0ODM0MDczMGE1ZmE4NTQ0YiIsInZhbGlkYXRpb25fa2V5IjoiMGQ4OWQzMTEyNjFlODQxMTI3ZTlhOThlNjE3ZjhhODFhMTkwNDQ2MTVmY2I1ZTllN2EwMjRmNmU1ZjM3NjFkZCIsInBob25lIjoiSEF1U1B5amdPZ3JGcEFFWG1CbFJ0Zz09IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzYwNDUyODgsInZlcnNpb24iOjJ9.oP8em_i1xORrlkLRFCRWrJ6MFIFfqmkEmgDCLK4xvllc_OOdmk4tg2EFZAvHGCmRSEqQ-de0R-Lm-PjBFVXPkvKLDbfGKlQno86ACcxheGWHpKeSFhCSS1M1aJQfo6VL4IFWSV6EybPSYSonVN0sCFlQ3BTpt8QDLNasdlTWd8B9ZnFwsexPczYOXOFNetc_va7iWoWvWselYohmI8Lr8URmIMVXN_CIaEziswDAlqTr40dxmw6CRNRCATJjEy-5UPTM_zcX7DSaBzWRNN0lA36KO5FCRHixjlvJ6znOnjJb_rlD2H4sdA-Q9Jn65UJ6Ye3MThiRx-PwzdHJO-Emlw"
+	sellerAuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTEzOTgwNDQsInVzZXIiOiIxNjI0MjYyNCIsInNoYXJkX2tleSI6IjUiLCJjbGllbnRfaWQiOiJzZWxsZXItcG9ydGFsIiwic2Vzc2lvbl9pZCI6ImY2Mzc2MWEyYTA0MjRlMjBiYTRiNzg5YTBlNThkYzJjIiwidmFsaWRhdGlvbl9rZXkiOiI5MDJjYWMzYjczMzQwZGVkMTRmMmNiOGY5ZWE5ZWIyNzJjYjkzZTBmODg4OTUzNGNkNTUzNDIxMDYzZjY1N2M3IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzU0MTM4NTYsInZlcnNpb24iOjJ9.cDD5AHSslkeIL-MkBQLZ_qql2bpIiQT8xIgyRX5FY69yF4GGumTE1KtMOdh0rPhPwdogiy0A1_az3wE2CJMgXHNrq4jRKNHuMoJiwtRCB7t_ElRtbKramsMd7FW-a5vffIjhr3Al2W180C_uQ0mBCnmVCEgQjUFn0JsKxfTPQJQ3Sgy3-AFwvLHhqAC82Kug26U2GYQlE7LAXz5KkyeW-h6K0EaPADR_aSNDi_JOWHss5DMm_d1S_h_OykEhjkWaLsvf3VDyNV_Isv6neXGFWN9IfoUCRr9vEDpS-AQ7QnIAA0_YJVXNojt2IFAuotdl47Gt5nyhg3XfZRppM6LcGw"
+	//sellerWbxKey    = "a4aeb81b-3aea-4bca-a373-b724a179a919"
 	// Список товаров для отслеживания [nmID: минимальная_цена]
 	products = map[int]float64{
 		439740235: 598.00,
-		363561833: 2184.00,
+		363561833: 2431.00,
 		355039724: 2756.00,
 		420175308: 995.00,
 		445719497: 351.00,
 		444947468: 637.00,
+		449727119: 1112.00,
+		450517748: 1190.00,
+		451852395: 1157.00,
+		447703683: 2431.00,
+		413320662: 1950.00,
+		452613966: 1950.00,
+		455308681: 826.00,
+		455874194: 936.00,
 	}
-
 	// Настройки программы
 	checkInterval = 5 * time.Minute // Интервал проверки цен
 )
@@ -238,8 +244,8 @@ func calculateFinalPrice(price float64, sellerDiscount, wbDiscount, walletDiscou
 // Поиск оптимальной цены и скидки для достижения целевой цены
 func findOptimalPrice(currentPrice float64, currentDiscount, wbDiscount, walletDiscount int, minPrice float64) (float64, int) {
 	const (
-		priceAdjustment    = 30.0 // ±30 рублей
-		discountAdjustment = 30   // ±30%
+		priceAdjustment    = 500.0 // ±100 рублей
+		discountAdjustment = 50    // ±50%
 	)
 
 	// Инициализация для поиска лучшего варианта
