@@ -220,22 +220,22 @@ func getProductInfo(nmId int) (price float64, sellerDiscount, wbDiscount int, er
 		nil
 }
 
-// Расчет финальной цены (скидка кошелька округляется вверх до рубля)
+// Расчет финальной цены (все скидки округляются вверх до рубля)
 func calculateFinalPrice(price float64, sellerDiscount, wbDiscount, walletDiscount int) float64 {
-	// Применяем скидку продавца (целое число)
-	priceAfterSeller := price * (1 - float64(sellerDiscount)/100)
+	// Применяем скидку WB: вычисляем размер и округляем вверх
+	wbDiscountAmount := price * float64(wbDiscount) / 100
+	wbDiscountRounded := math.Ceil(wbDiscountAmount)
+	currentPrice := price - wbDiscountRounded
 
-	// Применяем скидку WB (целое число)
-	priceAfterWB := priceAfterSeller * (1 - float64(wbDiscount)/100)
+	// Применяем скидку продавца
+	sellerDiscountAmount := currentPrice * float64(sellerDiscount) / 100
+	sellerDiscountRounded := math.Ceil(sellerDiscountAmount)
+	currentPrice -= sellerDiscountRounded
 
-	// Рассчитываем размер скидки кошелька в рублях
-	walletDiscountAmount := priceAfterWB * float64(walletDiscount) / 100
-
-	// Округляем скидку кошелька ВВЕРХ до целого рубля
-	walletDiscountAmount = math.Ceil(walletDiscountAmount)
-
-	// Вычитаем скидку кошелька
-	finalPrice := priceAfterWB - walletDiscountAmount
+	// Применяем скидку кошелька
+	walletDiscountAmount := currentPrice * float64(walletDiscount) / 100
+	walletDiscountRounded := math.Ceil(walletDiscountAmount)
+	finalPrice := currentPrice - walletDiscountRounded
 
 	// Округляем финальную цену до копейки
 	return math.Round(finalPrice*100) / 100

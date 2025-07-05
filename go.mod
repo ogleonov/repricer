@@ -1,6 +1,8 @@
-module repricer
+module your_project
 
-go 1.24.3
+go 1.23
+
+toolchain go1.24.3
 
 require github.com/chromedp/chromedp v0.13.7
 
@@ -11,5 +13,7 @@ require (
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.4.0 // indirect
+	github.com/josharian/intern v1.0.0 // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 )
