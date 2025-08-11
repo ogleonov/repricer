@@ -14,11 +14,12 @@ import (
 
 // Конфигурация программы
 var (
-	walletAuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTM4ODcyMzEsInVzZXIiOiIzNDE2NDgyMiIsInNoYXJkX2tleSI6IjkiLCJjbGllbnRfaWQiOiJ3YiIsInNlc3Npb25faWQiOiIzODM5NWQ5NDA5MDE0YTM0ODM0MDczMGE1ZmE4NTQ0YiIsInZhbGlkYXRpb25fa2V5IjoiMGQ4OWQzMTEyNjFlODQxMTI3ZTlhOThlNjE3ZjhhODFhMTkwNDQ2MTVmY2I1ZTllN2EwMjRmNmU1ZjM3NjFkZCIsInBob25lIjoiSEF1U1B5amdPZ3JGcEFFWG1CbFJ0Zz09IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzYwNDUyODgsInZlcnNpb24iOjJ9.JFunkykgrMXftGomjTMfn4fF4dlogBpUNVDANtn6YxbfuDB0l21amHOidAhXKVfJefoehAdO0u8YDOOLqWpA9vSM2F6ywkgPkqahEOZLadg4azb5AkYcqeS_dlcECOj8XthIU5EKPgzCrwCQRO5kR7HdjbFt7IK-7yoIcRFfL9Ww_CbyDlkP9q9NbUCqcQlQSe774LP4lCDRI6nM5kNMUd0BJlFPRxK9dL58n52YraOOpigcFngX1m7HmWUVYQQdHhiWNxTVcr10wBC30Jg-qlIX5IJTKRja_F_DoODWJPy-EXqOx309iowRvpG8m736G08H7cq8ASPUUiYxqO9F6g"
-	sellerAuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTQxMzkwMjEsInVzZXIiOiIxNjI0MjYyNCIsInNoYXJkX2tleSI6IjUiLCJjbGllbnRfaWQiOiJzZWxsZXItcG9ydGFsIiwic2Vzc2lvbl9pZCI6ImY2Mzc2MWEyYTA0MjRlMjBiYTRiNzg5YTBlNThkYzJjIiwidmFsaWRhdGlvbl9rZXkiOiI5MDJjYWMzYjczMzQwZGVkMTRmMmNiOGY5ZWE5ZWIyNzJjYjkzZTBmODg4OTUzNGNkNTUzNDIxMDYzZjY1N2M3IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzU0MTM4NTYsInZlcnNpb24iOjJ9.fayL01jqU1ZJeGJ9sLSAJHeDMyntLcHOKAO-SHIExtee4EpwLcQBdGDCNuQTG5AD2qcpWYZZBBrF89hUfxJ5bd7gdEL8J9-iW6Y_ealPQqLkoI4xyrH5wfIWKWgXMaZki9a8xQxIrQ7OikMiiVdNHXCA4AfxVHWeBa6yXWIgCbRWkdQtgaizXfshwxQdoLJeU5LdeupSJYl2TEKN-VS6kCd0ilQKTGbChyOtXS05hTAMtMnwhnBO_ZQPf-f57kuGlRa-1wjI7RqFje5RKe3iWpA0-UVB3LjyascFcEde8e3oHODfE7LrkGC9KPXAibP67EeiMCTRyoNVms4VdPX4Vg"
-	//sellerWbxKey    = "a4aeb81b-3aea-4bca-a373-b724a179a919"
-	// Список товаров для отслеживания [nmID: минимальная_цена]
-	products = map[int]float64{
+	walletAuthToken  = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTQ4MjYxMzcsInVzZXIiOiIzNDE2NDgyMiIsInNoYXJkX2tleSI6IjkiLCJjbGllbnRfaWQiOiJ3YiIsInNlc3Npb25faWQiOiIzODM5NWQ5NDA5MDE0YTM0ODM0MDczMGE1ZmE4NTQ0YiIsInZhbGlkYXRpb25fa2V5IjoiMGQ4OWQzMTEyNjFlODQxMTI3ZTlhOThlNjE3ZjhhODFhMTkwNDQ2MTVmY2I1ZTllN2EwMjRmNmU1ZjM3NjFkZCIsInBob25lIjoiSEF1U1B5amdPZ3JGcEFFWG1CbFJ0Zz09IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzYwNDUyODgsInZlcnNpb24iOjJ9.gI6B5QlOy_hW8iAmCLa7dUsEbsLf9k34Ds8P7tLO2pq7OMPDcXZNVEPmnQXo5fd-VrUFYhZVNMWDHiy2erFPL5LUZZh6yeTCmtNKMvzXt9ID0bMU_A3PCY5yrIEaQhRO7DLw_JhJ7xH2lJwa1pStYpj8T6vAQu4rB20zqgbFDwz5uYiuVbbCVcLFcclY0dkepY0NCZj8O8JEdIHJZblBiiUJ7_wd7GSs53esIYukECpy705ntPbWeWY_iGVDyEHdh4pzLtGVlIhLMlX5cSDyU8hyQ6M-OzeyeXd3fhDAonL1brwskYrFmewcZ4UMl_N8gWcWERuy5phFWIbiC4BPqw"
+	seller1AuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTQxMzkwMjEsInVzZXIiOiIxNjI0MjYyNCIsInNoYXJkX2tleSI6IjUiLCJjbGllbnRfaWQiOiJzZWxsZXItcG9ydGFsIiwic2Vzc2lvbl9pZCI6ImY2Mzc2MWEyYTA0MjRlMjBiYTRiNzg5YTBlNThkYzJjIiwidmFsaWRhdGlvbl9rZXkiOiI5MDJjYWMzYjczMzQwZGVkMTRmMmNiOGY5ZWE5ZWIyNzJjYjkzZTBmODg4OTUzNGNkNTUzNDIxMDYzZjY1N2M3IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzU0MTM4NTYsInZlcnNpb24iOjJ9.fayL01jqU1ZJeGJ9sLSAJHeDMyntLcHOKAO-SHIExtee4EpwLcQBdGDCNuQTG5AD2qcpWYZZBBrF89hUfxJ5bd7gdEL8J9-iW6Y_ealPQqLkoI4xyrH5wfIWKWgXMaZki9a8xQxIrQ7OikMiiVdNHXCA4AfxVHWeBa6yXWIgCbRWkdQtgaizXfshwxQdoLJeU5LdeupSJYl2TEKN-VS6kCd0ilQKTGbChyOtXS05hTAMtMnwhnBO_ZQPf-f57kuGlRa-1wjI7RqFje5RKe3iWpA0-UVB3LjyascFcEde8e3oHODfE7LrkGC9KPXAibP67EeiMCTRyoNVms4VdPX4Vg"
+	seller2AuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTQ4MzA1NjYsInVzZXIiOiIxNTg0NzMxMSIsInNoYXJkX2tleSI6IjMiLCJjbGllbnRfaWQiOiJzZWxsZXItcG9ydGFsIiwic2Vzc2lvbl9pZCI6ImRlOTFlNmRjODM5YTQ2ZDU4NWNiNDMwZTAyN2NmZWE2IiwidmFsaWRhdGlvbl9rZXkiOiI1Yjg2ZDMyMzZlOGMxYmNmOGU4NzU2Yzg1YzUwODQ2MTlmOTdiZDMxODRhNGE1NzM0MjE0ZmZjN2RlZTcxNDk0IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2ODI0NTY0MjAsInZlcnNpb24iOjJ9.MAn32dd-SuqhpgySZjCaeNocQGdErkDNhtngPTbIGdH5uoUAC0TX-2ZBLyNfzbmbwlxUkEHJRB6OJEunyaBBsZz8srPw1gm4gF5xF0UG2Y5NkZj0A1hj0bYg6y41vLdo1P69EkWCbtDoRuh_UxPVSG4cqmaMZqOTWcBMaRkxCbzvB-dLN-VZ1Rp9If7_mjcy0wj4AmgZ40JoZRDJeYuGE0jNh0sJjvI-YBqNSuXmuYMQ4g7OLUmzxe6FJoIcCXhJC389VorFvFKtlroyQbfQxU5Bd4J66kIC9vZECjySBvd3Xa3CZAGrV_DcEZdGgn8DGmEsAbsGwNbhij6kWtanVQ"
+
+	// Список товаров для первого продавца [nmID: минимальная_цена]
+	productsSeller1 = map[int]float64{
 		439740235: 598.00,
 		363561833: 2431.00,
 		355039724: 2756.00,
@@ -39,10 +40,38 @@ var (
 		485867509: 676.0,
 		486685652: 1235.0,
 		449727119: 1112.0,
+		492714507: 878.00,
 	}
+
+	// Список товаров для второго продавца [nmID: минимальная_цена]
+	productsSeller2 = map[int]float64{
+		486062217: 800.00,
+		483028809: 640.00,
+		473997083: 550.00,
+		478334856: 615.00,
+		485654591: 750.00,
+		471430353: 755.00,
+		472057995: 2100.00,
+		473066411: 810.00,
+		476823280: 750.00,
+		475454890: 520.00,
+		475499053: 520.00,
+		480109053: 520.00,
+		471832484: 750.00,
+		470975205: 1200.00,
+	}
+
 	// Настройки программы
 	checkInterval = 5 * time.Minute // Интервал проверки цен
 )
+
+// Структура для хранения данных продавца
+type Seller struct {
+	Name     string
+	Token    string
+	Cookie   string
+	Products map[int]float64
+}
 
 // Структуры для разбора ответов API
 type WalletResponse struct {
@@ -73,8 +102,27 @@ func main() {
 	defer logFile.Close()
 	log.SetOutput(logFile)
 
+	// Инициализация продавцов
+	sellers := []Seller{
+		{
+			Name:     "Первый продавец",
+			Token:    seller1AuthToken,
+			Cookie:   "_wbauid=1389459591727788866; ___wbu=2afbdd4a-2b25-44d0-a488-d2343f188ea6.1727788866; wbx-validation-key=a4aeb81b-3aea-4bca-a373-b724a179a919; _ym_uid=1726235106355624516; _ym_d=1740053345; external-locale=ru; x-supplier-id-external=be41cd8a-9260-412d-9445-cc8cf1d3aad0",
+			Products: productsSeller1,
+		},
+		{
+			Name:     "Второй продавец",
+			Token:    seller2AuthToken,
+			Cookie:   "_wbauid=5666810631754830452; wbx-validation-key=4f7e529c-4c72-4cdc-8b17-3075eac2bce4; x-supplier-id-external=df62fdc4-c58a-41dc-9aed-caf62c76df5f",
+			Products: productsSeller2,
+		},
+	}
+
 	log.Println("Запуск репрайсера Wildberries")
-	log.Printf("Отслеживается %d товаров\n", len(products))
+	log.Printf("Количество продавцов: %d", len(sellers))
+	for i, seller := range sellers {
+		log.Printf("Продавец %d: %s, товаров: %d", i+1, seller.Name, len(seller.Products))
+	}
 	log.Printf("Интервал проверки: %v\n", checkInterval)
 
 	for {
@@ -90,36 +138,46 @@ func main() {
 		}
 		log.Printf("Текущая скидка кошелька: %d%%", walletDiscount)
 
-		// Проверка каждого товара
-		for nmId, minPrice := range products {
-			price, sellerDiscount, wbDiscount, err := getProductInfo(nmId)
-			if err != nil {
-				log.Printf("Ошибка получения информации о товаре %d: %v", nmId, err)
-				continue
-			}
-
-			// Расчет финальной цены
-			finalPrice := calculateFinalPrice(price, sellerDiscount, wbDiscount, walletDiscount)
-			log.Printf("Товар %d - Цена: %.2f, Скидка продавца: %d%%, Скидка WB: %d%%, Финальная цена: %.2f, Минимальная цена: %.2f",
-				nmId, price, sellerDiscount, wbDiscount, finalPrice, minPrice)
-
-			// Корректировка при необходимости
-			if finalPrice < minPrice || finalPrice > minPrice+1 {
-				log.Printf("ТРЕБУЕТСЯ КОРРЕКТИРОВКА: Финальная цена %.2f вне диапазона [%.2f, %.2f]",
-					finalPrice, minPrice, minPrice+1)
-
-				newPrice, newDiscount := findOptimalPrice(price, sellerDiscount, wbDiscount, walletDiscount, minPrice)
-				err = updateProductPrice(nmId, newPrice, newDiscount)
-				if err != nil {
-					log.Printf("Ошибка обновления цены для товара %d: %v", nmId, err)
-				} else {
-					log.Printf("Цена обновлена: Новая цена = %.2f, Новая скидка = %d%%", newPrice, newDiscount)
-				}
-			}
+		// Обработка товаров для каждого продавца
+		for _, seller := range sellers {
+			processSellerProducts(seller, walletDiscount)
 		}
 
 		log.Printf("Цикл завершен. Следующая проверка через %v\n", checkInterval)
 		time.Sleep(checkInterval)
+	}
+}
+
+// Обработка товаров конкретного продавца
+func processSellerProducts(seller Seller, walletDiscount int) {
+	log.Printf("--- Обработка товаров для %s ---", seller.Name)
+
+	// Проверка каждого товара
+	for nmId, minPrice := range seller.Products {
+		price, sellerDiscount, wbDiscount, err := getProductInfo(nmId, seller.Token, seller.Cookie)
+		if err != nil {
+			log.Printf("Ошибка получения информации о товаре %d: %v", nmId, err)
+			continue
+		}
+
+		// Расчет финальной цены
+		finalPrice := calculateFinalPrice(price, sellerDiscount, wbDiscount, walletDiscount)
+		log.Printf("%s - Товар %d - Цена: %.2f, Скидка продавца: %d%%, Скидка WB: %d%%, Финальная цена: %.2f, Минимальная цена: %.2f",
+			seller.Name, nmId, price, sellerDiscount, wbDiscount, finalPrice, minPrice)
+
+		// Корректировка при необходимости
+		if finalPrice < minPrice || finalPrice > minPrice+1 {
+			log.Printf("ТРЕБУЕТСЯ КОРРЕКТИРОВКА: Финальная цена %.2f вне диапазона [%.2f, %.2f]",
+				finalPrice, minPrice, minPrice+1)
+
+			newPrice, newDiscount := findOptimalPrice(price, sellerDiscount, wbDiscount, walletDiscount, minPrice)
+			err = updateProductPrice(nmId, newPrice, newDiscount, seller.Token, seller.Cookie)
+			if err != nil {
+				log.Printf("Ошибка обновления цены для товара %d: %v", nmId, err)
+			} else {
+				log.Printf("Цена обновлена: Новая цена = %.2f, Новая скидка = %d%%", newPrice, newDiscount)
+			}
+		}
 	}
 }
 
@@ -172,7 +230,7 @@ func getWalletDiscount() (int, error) {
 }
 
 // Запрос информации о товаре (возвращает целые числа для скидок)
-func getProductInfo(nmId int) (price float64, sellerDiscount, wbDiscount int, err error) {
+func getProductInfo(nmId int, sellerToken string, cookie string) (price float64, sellerDiscount, wbDiscount int, err error) {
 	url := fmt.Sprintf("https://discounts-prices.wildberries.ru/ns/dp-api/discounts-prices/suppliers/api/v1/nm/info?nmID=%d", nmId)
 
 	client := &http.Client{}
@@ -184,7 +242,7 @@ func getProductInfo(nmId int) (price float64, sellerDiscount, wbDiscount int, er
 	// Устанавливаем заголовки
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("Accept-Language", "ru-RU,ru;q=0.9,zh-CN;q=0.8,zh;q=0.7,en-US;q=0.6,en;q=0.5")
-	req.Header.Set("Authorizev3", sellerAuthToken)
+	req.Header.Set("Authorizev3", sellerToken)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Dnt", "1")
 	req.Header.Set("Origin", "https://seller.wildberries.ru")
@@ -197,7 +255,7 @@ func getProductInfo(nmId int) (price float64, sellerDiscount, wbDiscount int, er
 	req.Header.Set("Sec-Fetch-Mode", "cors")
 	req.Header.Set("Sec-Fetch-Site", "same-site")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36")
-	req.Header.Set("Cookie", "_wbauid=1389459591727788866; ___wbu=2afbdd4a-2b25-44d0-a488-d2343f188ea6.1727788866; wbx-validation-key=a4aeb81b-3aea-4bca-a373-b724a179a919; _ym_uid=1726235106355624516; _ym_d=1740053345; external-locale=ru; x-supplier-id-external=be41cd8a-9260-412d-9445-cc8cf1d3aad0")
+	req.Header.Set("Cookie", cookie) // Используем переданные куки
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -301,7 +359,7 @@ func findOptimalPrice(currentPrice float64, currentDiscount, wbDiscount, walletD
 }
 
 // Обновление цены товара
-func updateProductPrice(nmId int, newPrice float64, newDiscount int) error {
+func updateProductPrice(nmId int, newPrice float64, newDiscount int, sellerToken string, cookie string) error {
 	url := "https://discounts-prices.wildberries.ru/ns/dp-api/discounts-prices/suppliers/api/v1/nm/upload/task?checkChange=true"
 
 	// Структура запроса (все поля целочисленные)
@@ -340,7 +398,7 @@ func updateProductPrice(nmId int, newPrice float64, newDiscount int) error {
 	// Устанавливаем заголовки
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("Accept-Language", "ru-RU,ru;q=0.9,zh-CN;q=0.8,zh;q=0.7,en-US;q=0.6,en;q=0.5")
-	req.Header.Set("Authorizev3", sellerAuthToken)
+	req.Header.Set("Authorizev3", sellerToken)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Dnt", "1")
 	req.Header.Set("Origin", "https://seller.wildberries.ru")
@@ -353,7 +411,7 @@ func updateProductPrice(nmId int, newPrice float64, newDiscount int) error {
 	req.Header.Set("Sec-Fetch-Mode", "cors")
 	req.Header.Set("Sec-Fetch-Site", "same-site")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36")
-	req.Header.Set("Cookie", "_wbauid=1389459591727788866; ___wbu=2afbdd4a-2b25-44d0-a488-d2343f188ea6.1727788866; wbx-validation-key=a4aeb81b-3aea-4bca-a373-b724a179a919; _ym_uid=1726235106355624516; _ym_d=1740053345; external-locale=ru; x-supplier-id-external=be41cd8a-9260-412d-9445-cc8cf1d3aad0")
+	req.Header.Set("Cookie", cookie) // Используем переданные куки
 
 	resp, err := client.Do(req)
 	if err != nil {
