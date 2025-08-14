@@ -62,6 +62,7 @@ var (
 		470975205: 1200.00,
 		493044219: 780.00,
 		493490629: 570.00,
+		495179694: 770.00,
 	}
 
 	// Настройки программы
@@ -311,54 +312,73 @@ func calculateFinalPrice(price float64, sellerDiscount, wbDiscount, walletDiscou
 // Поиск оптимальной цены и скидки для достижения целевой цены
 func findOptimalPrice(currentPrice float64, currentDiscount, wbDiscount, walletDiscount int, minPrice float64) (float64, int) {
 	const (
-		priceAdjustment    = 500.0 // ±100 рублей
-		discountAdjustment = 50    // ±50%
+		discountRange = 10 // ±10% для скидки
 	)
 
-	// Инициализация для поиска лучшего варианта
+	// Инициализация лучших значений
 	bestPrice := currentPrice
 	bestDiscount := currentDiscount
 	bestDiff := math.MaxFloat64
 
-	// Перебираем комбинации цены и скидки
-	for priceOffset := -priceAdjustment; priceOffset <= priceAdjustment; priceOffset += 1.0 {
-		for discountOffset := -discountAdjustment; discountOffset <= discountAdjustment; discountOffset++ {
-			// Рассчитываем новые значения
-			newPrice := math.Max(1, currentPrice+priceOffset)
-			newDiscount := currentDiscount + discountOffset
+	// Перебираем возможные скидки
+	for discountOffset := -discountRange; discountOffset <= discountRange; discountOffset++ {
+		newDiscount := currentDiscount + discountOffset
 
-			// Проверяем допустимость скидки
-			if newDiscount < 0 || newDiscount > 100 {
-				continue
-			}
+		// Пропускаем недопустимые значения скидки
+		if newDiscount < 0 || newDiscount > 100 {
+			continue
+		}
 
-			// Рассчитываем итоговую цену
-			finalPrice := calculateFinalPrice(newPrice, newDiscount, wbDiscount, walletDiscount)
+		// Находим оптимальную цену для текущей скидки
+		price, diff := findPriceForDiscount(newDiscount, wbDiscount, walletDiscount, minPrice)
 
-			// Если цена ниже минимальной - пропускаем
-			if finalPrice < minPrice {
-				continue
-			}
-
-			// Рассчитываем разницу с минимальной ценой
-			diff := finalPrice - minPrice
-
-			// Если нашли более близкий вариант к минимальной цене
-			if diff < bestDiff {
-				bestPrice = newPrice
-				bestDiscount = newDiscount
-				bestDiff = diff
-			}
+		// Если нашли лучший вариант
+		if diff >= 0 && diff < bestDiff {
+			bestPrice = price
+			bestDiscount = newDiscount
+			bestDiff = diff
 		}
 	}
 
-	// Если не нашли ни одного варианта выше минимальной цены
+	// Если не нашли подходящий вариант
 	if bestDiff == math.MaxFloat64 {
-		log.Println("Не удалось найти вариант выше минимальной цены. Используем текущие значения.")
 		return currentPrice, currentDiscount
 	}
 
 	return bestPrice, bestDiscount
+}
+
+// Поиск оптимальной цены для фиксированной скидки
+func findPriceForDiscount(discount, wbDiscount, walletDiscount int, minPrice float64) (float64, float64) {
+	// Границы поиска цены
+	low := minPrice
+	high := minPrice * 2 // Верхняя граница - удвоенная минимальная цена
+
+	bestPrice := low
+	bestDiff := math.MaxFloat64
+
+	// Бинарный поиск оптимальной цены
+	for high-low > 0.01 { // Точность до копейки
+		mid := (low + high) / 2
+		finalPrice := calculateFinalPrice(mid, discount, wbDiscount, walletDiscount)
+		diff := finalPrice - minPrice
+
+		if diff >= 0 {
+			if diff < bestDiff {
+				bestDiff = diff
+				bestPrice = mid
+			}
+			high = mid // Пробуем снизить цену
+		} else {
+			low = mid // Повышаем цену
+		}
+	}
+
+	// Проверяем последнюю цену
+	finalPrice := calculateFinalPrice(bestPrice, discount, wbDiscount, walletDiscount)
+	finalDiff := finalPrice - minPrice
+
+	return bestPrice, finalDiff
 }
 
 // Обновление цены товара
