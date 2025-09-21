@@ -4,7 +4,11 @@ go 1.23
 
 toolchain go1.24.3
 
-require github.com/chromedp/chromedp v0.13.7
+require (
+	github.com/chromedp/chromedp v0.13.7
+	github.com/mattn/go-sqlite3 v1.14.32
+	gopkg.in/telebot.v3 v3.3.8
+)
 
 require (
 	github.com/chromedp/cdproto v0.0.0-20250403032234-65de8f5d025b // indirect
@@ -13,8 +17,5 @@ require (
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.4.0 // indirect
-	github.com/mattn/go-sqlite3 v1.14.32 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	golang.org/x/sys v0.29.0 // indirect
-	gopkg.in/telebot.v3 v3.3.8 // indirect
 )
