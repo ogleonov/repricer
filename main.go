@@ -14,7 +14,6 @@ import (
 	"strings"
 	"time"
 
-	_ "github.com/mattn/go-sqlite3"
 	"gopkg.in/telebot.v3"
 )
 
@@ -84,7 +83,7 @@ var (
 
 func initDB() error {
 	var err error
-	db, err = sql.Open("sqlite3", "./products.db")
+	db, err = sql.Open("sqlite", "./products.db")
 	if err != nil {
 		return err
 	}
