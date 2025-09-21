@@ -20,7 +20,7 @@ import (
 
 // Конфигурация программы
 var (
-	walletAuthToken  = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTc0Mzk3NTMsInVzZXIiOiIzNDE2NDgyMiIsInNoYXJkX2tleSI6IjkiLCJjbGllbnRfaWQiOiJ3YiIsInNlc3Npb25faWQiOiIzODM5NWQ5NDA5MDE0YTM0ODM0MDczMGE1ZmE4NTQ0YiIsInZhbGlkYXRpb25fa2V5IjoiMGQ4OWQzMTEyNjFlODQxMTI3ZTlhOThlNjE3ZjhhODFhMTkwNDQ2MTVmY2I1ZTllN2EwMjRmNmU1ZjM3NjFkZCIsInBob25lIjoiSEF1U1B5amdPZ3JGcUFFWG1CbFJ0Zz09IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzYwNDUyODgsInZlcnNpb24iOjJ9.SOUGPCnGMv2qNfsuri4AI1n6bzbX0sCSFmwap4gVAcaYolvzFIElFDjwBXmFpIJBdjV0W_tyOD5g-vAmF50TyFGmem2YyUkKIuXMJ8bpYUNrcw5JEIFIqoghIV94R9DsS_imfIzFWNm2HKQWQDrEz4uLdiEkWKtwfZHDvLVdCetNrt0dM07_zo4Gc-LJA6wDeEIfKTxEmwWF9lS7A9buXUEUBVXZqfOgCWUnPmv2PdVLC4aO1ZrcKd4JBPYSK7Ug3vzu9p95QuvjuXe5eE8teB57UKHswd1cqm4IpLnh6aXqOAzp7xUPMK90wc8jzGdB7MixYskQG3ugkLiH1PMMfg"
+	walletAuthToken  = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTg0NDc1MDgsInVzZXIiOiIzNDE2NDgyMiIsInNoYXJkX2tleSI6IjkiLCJjbGllbnRfaWQiOiJ3YiIsInNlc3Npb25faWQiOiIzODM5NWQ5NDA5MDE0YTM0ODM0MDczMGE1ZmE4NTQ0YiIsInZhbGlkYXRpb25fa2V5IjoiMGQ4OWQzMTEyNjFlODQxMTI3ZTlhOThlNjE3ZjhhODFhMTkwNDQ2MTVmY2I1ZTllN2EwMjRmNmU1ZjM3NjFkZCIsInBob25lIjoiSEF1U1B5amdPZ3JGcEFFWG1CbFJ0Zz09IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzYwNDUyODgsInZlcnNpb24iOjJ9.QvkYCHqteG5940eiu5b8AX1CGJ_cdkdZx_D1vAnvTUFyZVPzzrCSxBn907jKBLEdj2MG50lg3Bmox_RyaeInZ2eKWpNT36KxxdNEc0Bws0RmXASb9-jdNnsFTrg7gic9dikftOmzbvdInSwwtFAEHjXafK_Cs3HYU_n3XoyMNaA-UHU5_62v-V7hnypRM8sd07mqu3XHgXnHSA0x9sYCXFcVttOUKylNf2L8HcRXxUFggqj3VH84lpb2GK_1QonvDN-5DHfWY-GIr4ibas8l5BE1Npv0NwaLqTCERRL4BlICvBv17k6AlwL3uQnOalh2yp-C3AK7JSe_KavHPX_cDA"
 	seller1AuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTY3NTEzNTYsInVzZXIiOiIxNjI0MjYyNCIsInNoYXJkX2tleSI6IjUiLCJjbGllbnRfaWQiOiJzZWxsZXItcG9ydGFsIiwic2Vzc2lvbl9pZCI6ImY2Mzc2MWEyYTA0MjRlMjBiYTRiNzg5YTBlNThkYzJjIiwidmFsaWRhdGlvbl9rZXkiOiI5MDJjYWMzYjczMzQwZGVkMTRmMmNiOGY5ZWE5ZWIyNzJjYjkzZTBmODg4OTUzNGNkNTUzNDIxMDYzZjY1N2M3IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzU0MTM4NTYsInZlcnNpb24iOjJ9.sdU1GmWDOzAVm32oT-qhYlD6sPi1LbZwbXYARFUMtxj5-N6nxVWB-kKxTba7lvOew6RnYMHdEYBzIZA1_Z_ZUyPMyhTcPys07bGa9c7V45CisXJGL8RaWyvID4e6_DH4oZmub5QoBynR80ArpCCCeCJf-nXAS3jSUFSaPeMAbja7lN0oZfXP8OuGk91Cn3ORq6V19G2wK0N1HcRDlV0fRGK29R3WQZ8L-obYOey8ltPYdi9x5c4vNjHOqKsfvRC8zigPyxla4XKW3S9NBhMJwUuoTh_2H5FL0YfsZ332AsNKibjWxTIfgNgVtFga_m45uuZZhiYkYEgkiFmS2fevFw"
 	seller2AuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTc1MTQ1MDMsInVzZXIiOiIxNTg0NzMxMSIsInNoYXJkX2tleSI6IjMiLCJjbGllbnRfaWQiOiJzZWxsZXItcG9ydGFsIiwic2Vzc2lvbl9pZCI6ImRlOTFlNmRjODM5YTQ2ZDU4NWNiNDMwZTAyN2NmZWE2IiwidmFsaWRhdGlvbl9rZXkiOiI5OTdjMmQzYzgyODEwYzcwOGIyYjNkZTdlMjM5MzJlOGUzZjk4MzdmYzUwZjYyNjdlMWMzNmNhNDhhY2FkN2U0IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2ODI0NTY0MjAsInZlcnNpb24iOjJ9.br-0_xHb2Z7TSEnHXX6fyclZ7kEP6QjDkyKYZ5-VZKw5ab7WT17mzuszrxtLHyvNzsSURksAX7QRI82fjtRSMRyyNADbGjI-uW9fcqY8pcg87mdLFbxRVdHR0ytJ5ScsVP7jOae_4RAm5p_qtt9O0vrBSs8OivIkrtFCzjElCVRyFwbcXikBPCd-zs0BsbvWKAxG5F1wvUtvHNBwxYec52-liQjJBrKUYlefNrNBNov4LuKgUz8DPUW6d4mQTLM4gVN6TAAu7hK_tWNr9w4bUwD86iURTBtXNI0N4HdTdkSlnaH7C4FqLZnXc5HcTt91hmDCoLfEuCPlC8fveoK1LQ"
 
@@ -30,7 +30,8 @@ var (
 	adminTelegramID   = int64(3572936)   // ID администратора
 
 	// Telegram bot token
-	telegramBotToken = "8083101312:AAHzCABhhWzbv5kEVxSQV6-rjNkF-9YuX7M" //  Токен бота
+	telegramBotToken = "8083101312:AAHzCABhhWzbv5kEVxSQV6-rjNkF-9YuX7M" // Токен бота
+
 	// Настройки программы
 	checkInterval = 5 * time.Minute // Интервал проверки цен
 )
@@ -48,6 +49,7 @@ type Seller struct {
 type Product struct {
 	ID       int
 	NmID     int
+	Name     string // Новое поле — название товара
 	Price    float64
 	Enabled  bool
 	SellerID int
@@ -100,6 +102,7 @@ func initDB() error {
 		CREATE TABLE IF NOT EXISTS products (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			nm_id INTEGER NOT NULL UNIQUE,
+			name TEXT NOT NULL DEFAULT '',
 			price REAL NOT NULL,
 			enabled BOOLEAN NOT NULL DEFAULT 1,
 			seller_id INTEGER NOT NULL,
@@ -144,82 +147,88 @@ func loadInitialData() error {
 	}
 
 	// Загрузка начальных товаров для первого продавца
-	productsSeller1 := map[int]float64{
-		439740235: 598.00,
-		363561833: 2431.00,
-		355039724: 2756.00,
-		420175308: 995.00,
-		445719497: 351.00,
-		444947468: 637.00,
-		450517748: 1190.00,
-		451852395: 1157.00,
-		447703683: 2431.00,
-		413320662: 1950.00,
-		452613966: 1950.00,
-		455308681: 826.00,
-		455874194: 936.00,
-		465007169: 533.0,
-		466364173: 1612.00,
-		472724832: 1352.00,
-		458176275: 1664.00,
-		485867509: 676.0,
-		486685652: 1235.0,
-		449727119: 1112.0,
-		492714507: 878.00,
-		492947914: 578.00,
-		498858071: 1047.00,
-		500564205: 826.00,
+	productsSeller1 := map[int]struct {
+		Price float64
+		Name  string
+	}{
+		439740235: {598.00, "Товар 439740235"},
+		363561833: {2431.00, "Товар 363561833"},
+		355039724: {2756.00, "Товар 355039724"},
+		420175308: {995.00, "Товар 420175308"},
+		445719497: {351.00, "Товар 445719497"},
+		444947468: {637.00, "Товар 444947468"},
+		450517748: {1190.00, "Товар 450517748"},
+		451852395: {1157.00, "Товар 451852395"},
+		447703683: {2431.00, "Товар 447703683"},
+		413320662: {1950.00, "Товар 413320662"},
+		452613966: {1950.00, "Товар 452613966"},
+		455308681: {826.00, "Товар 455308681"},
+		455874194: {936.00, "Товар 455874194"},
+		465007169: {533.00, "Товар 465007169"},
+		466364173: {1612.00, "Товар 466364173"},
+		472724832: {1352.00, "Товар 472724832"},
+		458176275: {1664.00, "Товар 458176275"},
+		485867509: {676.00, "Товар 485867509"},
+		486685652: {1235.00, "Товар 486685652"},
+		449727119: {1112.00, "Товар 449727119"},
+		492714507: {878.00, "Товар 492714507"},
+		492947914: {578.00, "Товар 492947914"},
+		498858071: {1047.00, "Товар 498858071"},
+		500564205: {826.00, "Товар 500564205"},
 	}
 
 	// Загрузка начальных товаров для второго продавца
-	productsSeller2 := map[int]float64{
-		486062217: 800.00,
-		483028809: 640.00,
-		473997083: 550.00,
-		478334856: 615.00,
-		485654591: 750.00,
-		471430353: 755.00,
-		472057995: 2100.00,
-		473066411: 810.00,
-		476823280: 750.00,
-		475454890: 520.00,
-		475499053: 520.00,
-		480109053: 520.00,
-		471832484: 750.00,
-		470975205: 1200.00,
-		493044219: 780.00,
-		493490629: 570.00,
-		495179694: 767.00,
-		496076265: 670.00,
-		496941899: 871.00,
-		496570292: 735.00,
-		499065435: 2470.00,
-		505166842: 598.00,
-		517572489: 3300.0,
-		524447299: 2236.0,
-		525352390: 2470.0,
-		525977899: 2691.0,
-		534976766: 1378.0,
-		528079095: 3627.0,
-		497033245: 871.0,
+	productsSeller2 := map[int]struct {
+		Price float64
+		Name  string
+	}{
+		486062217: {800.00, "Товар 486062217"},
+		483028809: {640.00, "Товар 483028809"},
+		473997083: {550.00, "Товар 473997083"},
+		478334856: {615.00, "Товар 478334856"},
+		485654591: {750.00, "Товар 485654591"},
+		471430353: {755.00, "Товар 471430353"},
+		472057995: {2100.00, "Товар 472057995"},
+		473066411: {810.00, "Товар 473066411"},
+		476823280: {750.00, "Товар 476823280"},
+		475454890: {520.00, "Товар 475454890"},
+		475499053: {520.00, "Товар 475499053"},
+		480109053: {520.00, "Товар 480109053"},
+		471832484: {750.00, "Товар 471832484"},
+		470975205: {1200.00, "Товар 470975205"},
+		493044219: {780.00, "Товар 493044219"},
+		493490629: {570.00, "Товар 493490629"},
+		495179694: {767.00, "Товар 495179694"},
+		496076265: {670.00, "Товар 496076265"},
+		496941899: {871.00, "Товар 496941899"},
+		496570292: {735.00, "Товар 496570292"},
+		499065435: {2470.00, "Товар 499065435"},
+		505166842: {598.00, "Товар 505166842"},
+		517572489: {3300.00, "Товар 517572489"},
+		524447299: {2236.00, "Товар 524447299"},
+		525352390: {2470.00, "Товар 525352390"},
+		525977899: {2691.00, "Товар 525977899"},
+		534976766: {1378.00, "Товар 534976766"},
+		528079095: {3627.00, "Товар 528079095"},
+		497033245: {871.00, "Товар 497033245"},
 	}
 
 	// Сохранение товаров в БД
-	for nmID, price := range productsSeller1 {
+	for nmID, data := range productsSeller1 {
 		_, err := db.Exec(`
-			INSERT OR IGNORE INTO products (nm_id, price, enabled, seller_id) 
-			VALUES (?, ?, ?, ?)`,
-			nmID, price, true, 1)
+			INSERT OR IGNORE INTO products (nm_id, name, price, enabled, seller_id) 
+			VALUES (?, ?, ?, ?, ?)`,
+			nmID, data.Name, data.Price, true, 1)
 		if err != nil {
 			return err
 		}
 	}
 
-	for nmID, price := range productsSeller2 {
+	for nmID, data := range productsSeller2 {
 		_, err := db.Exec(`
-			INSERT OR IGNORE INTO products (nm_id, price, enabled, seller_id) 
-			VALUES (?, ?, ?, ?)`,
-			nmID, price, true, 2)
+			INSERT OR IGNORE INTO products (nm_id, name, price, enabled, seller_id) 
+			VALUES (?, ?, ?, ?, ?)`,
+			nmID, data.Name, data.Price, true, 2)
 		if err != nil {
 			return err
 		}
@@ -238,7 +247,7 @@ func getSellerByTelegramID(telegramID int64) (*Seller, error) {
 }
 
 func getProductsBySellerID(sellerID int) ([]Product, error) {
-	rows, err := db.Query("SELECT id, nm_id, price, enabled, seller_id FROM products WHERE seller_id = ?", sellerID)
+	rows, err := db.Query("SELECT id, nm_id, name, price, enabled, seller_id FROM products WHERE seller_id = ?", sellerID)
 	if err != nil {
 		return nil, err
 	}
@@ -247,7 +256,7 @@ func getProductsBySellerID(sellerID int) ([]Product, error) {
 	var products []Product
 	for rows.Next() {
 		var p Product
-		err := rows.Scan(&p.ID, &p.NmID, &p.Price, &p.Enabled, &p.SellerID)
+		err := rows.Scan(&p.ID, &p.NmID, &p.Name, &p.Price, &p.Enabled, &p.SellerID)
 		if err != nil {
 			return nil, err
 		}
@@ -258,7 +267,7 @@ func getProductsBySellerID(sellerID int) ([]Product, error) {
 }
 
 func getAllProducts() ([]Product, error) {
-	rows, err := db.Query("SELECT id, nm_id, price, enabled, seller_id FROM products")
+	rows, err := db.Query("SELECT id, nm_id, name, price, enabled, seller_id FROM products")
 	if err != nil {
 		return nil, err
 	}
@@ -267,7 +276,7 @@ func getAllProducts() ([]Product, error) {
 	var products []Product
 	for rows.Next() {
 		var p Product
-		err := rows.Scan(&p.ID, &p.NmID, &p.Price, &p.Enabled, &p.SellerID)
+		err := rows.Scan(&p.ID, &p.NmID, &p.Name, &p.Price, &p.Enabled, &p.SellerID)
 		if err != nil {
 			return nil, err
 		}
@@ -277,15 +286,29 @@ func getAllProducts() ([]Product, error) {
 	return products, nil
 }
 
-func addProduct(nmID int, price float64, sellerID int) error {
-	_, err := db.Exec("INSERT INTO products (nm_id, price, enabled, seller_id) VALUES (?, ?, ?, ?)",
-		nmID, price, true, sellerID)
+func addProduct(nmID int, price float64, sellerID int, name string) error {
+	_, err := db.Exec("INSERT OR REPLACE INTO products (nm_id, name, price, enabled, seller_id) VALUES (?, ?, ?, ?, ?)",
+		nmID, name, price, true, sellerID)
 	return err
 }
 
 func updateProductPriceByNmID(nmID int, newPrice float64, sellerID int) error {
 	result, err := db.Exec("UPDATE products SET price = ? WHERE nm_id = ? AND seller_id = ?",
 		newPrice, nmID, sellerID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return fmt.Errorf("товар с nmID=%d для продавца %d не найден", nmID, sellerID)
+	}
+
+	return nil
+}
+
+func updateProductName(nmID int, name string, sellerID int) error {
+	result, err := db.Exec("UPDATE products SET name = ? WHERE nm_id = ? AND seller_id = ?", name, nmID, sellerID)
 	if err != nil {
 		return err
 	}
@@ -312,8 +335,18 @@ func deleteProductByNmID(nmID int, sellerID int) error {
 
 func getProductByNmID(nmID int, sellerID int) (*Product, error) {
 	var p Product
-	err := db.QueryRow("SELECT id, nm_id, price, enabled, seller_id FROM products WHERE nm_id = ? AND seller_id = ?",
-		nmID, sellerID).Scan(&p.ID, &p.NmID, &p.Price, &p.Enabled, &p.SellerID)
+	err := db.QueryRow("SELECT id, nm_id, name, price, enabled, seller_id FROM products WHERE nm_id = ? AND seller_id = ?",
+		nmID, sellerID).Scan(&p.ID, &p.NmID, &p.Name, &p.Price, &p.Enabled, &p.SellerID)
+	if err != nil {
+		return nil, err
+	}
+	return &p, nil
+}
+
+func getProductByNmIDForAnySeller(nmID int) (*Product, error) {
+	var p Product
+	err := db.QueryRow("SELECT id, nm_id, name, price, enabled, seller_id FROM products WHERE nm_id = ?",
+		nmID).Scan(&p.ID, &p.NmID, &p.Name, &p.Price, &p.Enabled, &p.SellerID)
 	if err != nil {
 		return nil, err
 	}
@@ -332,28 +365,39 @@ func setupTelegramBot() error {
 
 	// Обработчики команд
 	bot.Handle("/start", func(c telebot.Context) error {
-		return c.Send("Добро пожаловать в репрайсер Wildberries! Доступные команды:\n" +
-			"/products - список ваших товаров\n" +
-			"/add nmID цена - добавить товар (например: /add 123456789 999.99)\n" +
-			"/price nmID новая_цена - изменить цену товара\n" +
-			"/toggle nmID - включить/выключить товар\n" +
-			"/delete nmID - удалить товар")
+		helpText := "Добро пожаловать в репрайсер Wildberries! Доступные команды:\n\n" +
+			"🔸 /products — список ваших товаров (с артикулом, названием и ценой)\n" +
+			"🔸 /add nmID цена [название] — добавить новый товар\n" +
+			"🔸 /price nmID новая_цена — изменить целевую цену товара\n" +
+			"🔸 /name nmID Название — установить или изменить название товара\n" +
+			"🔸 /toggle nmID — включить/выключить отслеживание цены\n" +
+			"🔸 /delete nmID — удалить товар из системы\n\n" +
+			"💡 Чтобы снова увидеть этот список — просто отправьте команду /start"
+
+		return c.Send(helpText)
 	})
 
 	bot.Handle("/products", handleProductsList)
 	bot.Handle("/add", handleAddProduct)
 	bot.Handle("/price", handleUpdatePrice)
+	bot.Handle("/name", handleSetName)
 	bot.Handle("/toggle", handleToggleProduct)
 	bot.Handle("/delete", handleDeleteProduct)
 
 	return nil
 }
 
+// Вспомогательная функция: отправляет сообщение + напоминание о /start
+func sendWithHelp(c telebot.Context, text string) error {
+	fullText := text + "\n\n💡 Чтобы посмотреть все команды — отправьте /start"
+	return c.Send(fullText)
+}
+
 func handleProductsList(c telebot.Context) error {
 	telegramID := c.Sender().ID
 	seller, err := getSellerByTelegramID(telegramID)
 	if err != nil {
-		return c.Send("У вас нет доступа к этой функции.")
+		return sendWithHelp(c, "У вас нет доступа к этой функции.")
 	}
 
 	var products []Product
@@ -364,11 +408,11 @@ func handleProductsList(c telebot.Context) error {
 	}
 
 	if err != nil {
-		return c.Send("Ошибка получения списка товаров.")
+		return sendWithHelp(c, "Ошибка получения списка товаров.")
 	}
 
 	if len(products) == 0 {
-		return c.Send("У вас пока нет товаров.")
+		return sendWithHelp(c, "У вас пока нет товаров.")
 	}
 
 	var message strings.Builder
@@ -390,248 +434,229 @@ func handleProductsList(c telebot.Context) error {
 			}
 		}
 
-		message.WriteString(fmt.Sprintf("NM: %d | Цена: %.2f | %s%s\n",
-			product.NmID, product.Price, status, sellerName))
+		name := product.Name
+		if name == "" {
+			name = "(без названия)"
+		}
+
+		message.WriteString(fmt.Sprintf("NM: %d | %s | Цена: %.2f | %s%s\n",
+			product.NmID, name, product.Price, status, sellerName))
 	}
 
-	return c.Send(message.String())
+	return sendWithHelp(c, message.String())
 }
 
 func handleAddProduct(c telebot.Context) error {
 	telegramID := c.Sender().ID
 	seller, err := getSellerByTelegramID(telegramID)
 	if err != nil {
-		return c.Send("У вас нет доступа к этой функции.")
+		return sendWithHelp(c, "У вас нет доступа к этой функции.")
 	}
 
 	args := strings.Fields(c.Message().Text)[1:]
 	if len(args) < 2 {
-		return c.Send("Использование: /add nmID цена")
+		return sendWithHelp(c, "Использование: /add nmID цена [название]")
 	}
 
 	nmID, err := strconv.Atoi(args[0])
 	if err != nil {
-		return c.Send("Неверный формат nmID.")
+		return sendWithHelp(c, "Неверный формат nmID.")
 	}
 
 	price, err := strconv.ParseFloat(args[1], 64)
 	if err != nil {
-		return c.Send("Неверный формат цены.")
+		return sendWithHelp(c, "Неверный формат цены.")
+	}
+
+	name := "Товар без названия"
+	if len(args) > 2 {
+		name = strings.Join(args[2:], " ")
 	}
 
 	targetSellerID := seller.ID
-	if telegramID == adminTelegramID && len(args) > 2 {
-		targetSellerID, err = strconv.Atoi(args[2])
+	if telegramID == adminTelegramID && len(args) > 3 {
+		targetSellerID, err = strconv.Atoi(args[3])
 		if err != nil {
-			return c.Send("Неверный ID продавца.")
+			return sendWithHelp(c, "Неверный ID продавца.")
 		}
 	}
 
-	err = addProduct(nmID, price, targetSellerID)
+	err = addProduct(nmID, price, targetSellerID, name)
 	if err != nil {
-		return c.Send("Ошибка добавления товара.")
+		return sendWithHelp(c, "Ошибка добавления товара.")
 	}
 
-	return c.Send(fmt.Sprintf("Товар %d добавлен с ценой %.2f", nmID, price))
+	return sendWithHelp(c, fmt.Sprintf("✅ Товар %d (%s) добавлен с ценой %.2f", nmID, name, price))
 }
 
 func handleUpdatePrice(c telebot.Context) error {
 	telegramID := c.Sender().ID
 	seller, err := getSellerByTelegramID(telegramID)
 	if err != nil {
-		return c.Send("У вас нет доступа к этой функции.")
+		return sendWithHelp(c, "У вас нет доступа к этой функции.")
 	}
 
 	args := strings.Fields(c.Message().Text)[1:]
 	if len(args) < 2 {
-		return c.Send("Использование: /price nmID новая_цена")
+		return sendWithHelp(c, "Использование: /price nmID новая_цена")
 	}
 
 	nmID, err := strconv.Atoi(args[0])
 	if err != nil {
-		return c.Send("Неверный формат nmID.")
+		return sendWithHelp(c, "Неверный формат nmID.")
 	}
 
 	newPrice, err := strconv.ParseFloat(args[1], 64)
 	if err != nil {
-		return c.Send("Неверный формат цены.")
+		return sendWithHelp(c, "Неверный формат цены.")
 	}
 
-	// Проверка прав доступа к товару
 	targetSellerID := seller.ID
 	if telegramID == adminTelegramID {
 		product, err := getProductByNmIDForAnySeller(nmID)
 		if err != nil {
-			return c.Send("Товар не найден.")
+			return sendWithHelp(c, "Товар не найден.")
 		}
 		targetSellerID = product.SellerID
 	} else {
 		_, err = getProductByNmID(nmID, seller.ID)
 		if err != nil {
-			return c.Send("Товар не найден или у вас нет к нему доступа.")
+			return sendWithHelp(c, "Товар не найден или у вас нет к нему доступа.")
 		}
 	}
 
-	// Обновляем цену в БД
 	err = updateProductPriceByNmID(nmID, newPrice, targetSellerID)
 	if err != nil {
-		return c.Send("Ошибка обновления цены.")
+		return sendWithHelp(c, "Ошибка обновления цены.")
 	}
 
-	// Отправляем подтверждение
-	msg := fmt.Sprintf("Цена товара NM %d обновлена на %.2f", nmID, newPrice)
-	_ = c.Send(msg)
+	msg := fmt.Sprintf("✅ Цена товара NM %d обновлена на %.2f", nmID, newPrice)
+	return sendWithHelp(c, msg)
+}
 
-	// === ДОБАВЛЕНО: Принудительная немедленная коррекция ===
-
-	// Находим продавца, которому принадлежит товар
-	var targetSeller *Seller
-	for i := range sellers {
-		if sellers[i].ID == targetSellerID {
-			targetSeller = &sellers[i]
-			break
-		}
-	}
-	if targetSeller == nil {
-		log.Printf("Продавец с ID %d не найден", targetSellerID)
-		return nil
-	}
-
-	// Получаем информацию о товаре с WB
-	price, sellerDiscount, wbDiscount, err := getProductInfo(nmID, targetSeller.Token, targetSeller.Cookie)
+func handleSetName(c telebot.Context) error {
+	telegramID := c.Sender().ID
+	seller, err := getSellerByTelegramID(telegramID)
 	if err != nil {
-		log.Printf("Не удалось получить данные с WB для товара %d: %v", nmID, err)
-		return nil
+		return sendWithHelp(c, "У вас нет доступа к этой функции.")
 	}
 
-	// Получаем скидку кошелька
-	walletDiscount, err := getWalletDiscount()
+	args := strings.Fields(c.Message().Text)[1:]
+	if len(args) < 2 {
+		return sendWithHelp(c, "Использование: /name nmID Название")
+	}
+
+	nmID, err := strconv.Atoi(args[0])
 	if err != nil {
-		log.Printf("Не удалось получить скидку кошелька: %v", err)
-		walletDiscount = 0 // продолжаем с 0%
+		return sendWithHelp(c, "Неверный формат nmID.")
 	}
 
-	// Рассчитываем финальную цену
-	finalPrice := calculateFinalPrice(price, sellerDiscount, wbDiscount, walletDiscount)
+	name := strings.Join(args[1:], " ")
 
-	// Проверяем, нужно ли корректировать цену
-	if finalPrice < newPrice || finalPrice > newPrice+1 {
-		log.Printf("[Мгновенная коррекция] Финальная цена %.2f вне диапазона [%.2f, %.2f] для товара %d",
-			finalPrice, newPrice, newPrice+1, nmID)
-
-		optimalPrice, optimalDiscount := findOptimalPrice(price, sellerDiscount, wbDiscount, walletDiscount, newPrice)
-		updateErr := updateProductPriceAPI(nmID, optimalPrice, optimalDiscount, targetSeller.Token, targetSeller.Cookie)
-		if updateErr != nil {
-			log.Printf("Ошибка API при мгновенной коррекции товара %d: %v", nmID, updateErr)
-		} else {
-			log.Printf("Мгновенно обновлено: цена=%.2f, скидка=%d%% для товара %d", optimalPrice, optimalDiscount, nmID)
+	targetSellerID := seller.ID
+	if telegramID == adminTelegramID {
+		product, err := getProductByNmIDForAnySeller(nmID)
+		if err != nil {
+			return sendWithHelp(c, "Товар не найден.")
 		}
+		targetSellerID = product.SellerID
 	} else {
-		log.Printf("Товар %d: финальная цена %.2f уже в допустимом диапазоне, коррекция не требуется", nmID, finalPrice)
+		_, err = getProductByNmID(nmID, seller.ID)
+		if err != nil {
+			return sendWithHelp(c, "Товар не найден или у вас нет к нему доступа.")
+		}
 	}
 
-	return nil
+	err = updateProductName(nmID, name, targetSellerID)
+	if err != nil {
+		return sendWithHelp(c, "Ошибка обновления названия.")
+	}
+
+	return sendWithHelp(c, fmt.Sprintf("✅ Название товара NM %d установлено: %s", nmID, name))
 }
 
 func handleToggleProduct(c telebot.Context) error {
 	telegramID := c.Sender().ID
 	seller, err := getSellerByTelegramID(telegramID)
 	if err != nil {
-		return c.Send("У вас нет доступа к этой функции.")
+		return sendWithHelp(c, "У вас нет доступа к этой функции.")
 	}
 
 	args := strings.Fields(c.Message().Text)[1:]
 	if len(args) < 1 {
-		return c.Send("Использование: /toggle nmID")
+		return sendWithHelp(c, "Использование: /toggle nmID")
 	}
 
 	nmID, err := strconv.Atoi(args[0])
 	if err != nil {
-		return c.Send("Неверный формат nmID.")
+		return sendWithHelp(c, "Неверный формат nmID.")
 	}
 
-	// Проверка прав доступа к товару
 	targetSellerID := seller.ID
 	if telegramID == adminTelegramID {
-		// Админ может работать с товарами любого продавца
 		product, err := getProductByNmIDForAnySeller(nmID)
 		if err != nil {
-			return c.Send("Товар не найден.")
+			return sendWithHelp(c, "Товар не найден.")
 		}
 		targetSellerID = product.SellerID
 	} else {
-		// Обычный пользователь может работать только со своими товарами
 		_, err = getProductByNmID(nmID, seller.ID)
 		if err != nil {
-			return c.Send("Товар не найден или у вас нет к нему доступа.")
+			return sendWithHelp(c, "Товар не найден или у вас нет к нему доступа.")
 		}
 	}
 
 	err = toggleProductStatusByNmID(nmID, targetSellerID)
 	if err != nil {
-		return c.Send("Ошибка изменения статуса товара.")
+		return sendWithHelp(c, "Ошибка изменения статуса товара.")
 	}
 
-	// Получаем обновленный статус
 	updatedProduct, _ := getProductByNmID(nmID, targetSellerID)
 	status := "включен"
 	if !updatedProduct.Enabled {
 		status = "выключен"
 	}
 
-	return c.Send(fmt.Sprintf("Товар NM %d %s", nmID, status))
+	return sendWithHelp(c, fmt.Sprintf("✅ Товар NM %d %s", nmID, status))
 }
 
 func handleDeleteProduct(c telebot.Context) error {
 	telegramID := c.Sender().ID
 	seller, err := getSellerByTelegramID(telegramID)
 	if err != nil {
-		return c.Send("У вас нет доступа к этой функции.")
+		return sendWithHelp(c, "У вас нет доступа к этой функции.")
 	}
 
 	args := strings.Fields(c.Message().Text)[1:]
 	if len(args) < 1 {
-		return c.Send("Использование: /delete nmID")
+		return sendWithHelp(c, "Использование: /delete nmID")
 	}
 
 	nmID, err := strconv.Atoi(args[0])
 	if err != nil {
-		return c.Send("Неверный формат nmID.")
+		return sendWithHelp(c, "Неверный формат nmID.")
 	}
 
-	// Проверка прав доступа к товару
 	targetSellerID := seller.ID
 	if telegramID == adminTelegramID {
-		// Админ может работать с товарами любого продавца
 		product, err := getProductByNmIDForAnySeller(nmID)
 		if err != nil {
-			return c.Send("Товар не найден.")
+			return sendWithHelp(c, "Товар не найден.")
 		}
 		targetSellerID = product.SellerID
 	} else {
-		// Обычный пользователь может работать только со своими товарами
 		_, err = getProductByNmID(nmID, seller.ID)
 		if err != nil {
-			return c.Send("Товар не найден или у вас нет к нему доступа.")
+			return sendWithHelp(c, "Товар не найден или у вас нет к нему доступа.")
 		}
 	}
 
 	err = deleteProductByNmID(nmID, targetSellerID)
 	if err != nil {
-		return c.Send("Ошибка удаления товара.")
+		return sendWithHelp(c, "Ошибка удаления товара.")
 	}
 
-	return c.Send(fmt.Sprintf("Товар NM %d удален", nmID))
-}
-
-func getProductByNmIDForAnySeller(nmID int) (*Product, error) {
-	var p Product
-	err := db.QueryRow("SELECT id, nm_id, price, enabled, seller_id FROM products WHERE nm_id = ?",
-		nmID).Scan(&p.ID, &p.NmID, &p.Price, &p.Enabled, &p.SellerID)
-	if err != nil {
-		return nil, err
-	}
-	return &p, nil
+	return sendWithHelp(c, fmt.Sprintf("✅ Товар NM %d удален", nmID))
 }
 
 func main() {
@@ -661,7 +686,6 @@ func main() {
 		log.Printf("Предупреждение: Не удалось настроить Telegram бота: %v", err)
 		log.Printf("Продолжаем работу без бота...")
 	} else {
-		// Запуск бота в отдельной горутине
 		go func() {
 			log.Println("Запуск Telegram бота...")
 			bot.Start()
@@ -680,7 +704,6 @@ func main() {
 		log.Println("========================================")
 		log.Println("Начало нового цикла проверки...")
 
-		// Получение скидки кошелька (целое число)
 		walletDiscount, err := getWalletDiscount()
 		if err != nil {
 			log.Printf("Ошибка получения скидки кошелька: %v", err)
@@ -689,7 +712,6 @@ func main() {
 		}
 		log.Printf("Текущая скидка кошелька: %d%%", walletDiscount)
 
-		// Обработка товаров для каждого продавца
 		for _, seller := range sellers {
 			processSellerProducts(seller, walletDiscount)
 		}
@@ -699,20 +721,16 @@ func main() {
 	}
 }
 
-// Обработка товаров конкретного продавца
 func processSellerProducts(seller Seller, walletDiscount int) {
 	log.Printf("--- Обработка товаров для %s ---", seller.Name)
 
-	// Получаем товары продавца из БД
 	products, err := getProductsBySellerID(seller.ID)
 	if err != nil {
 		log.Printf("Ошибка получения товаров для %s: %v", seller.Name, err)
 		return
 	}
 
-	// Проверка каждого товара
 	for _, product := range products {
-		// Пропускаем выключенные товары
 		if !product.Enabled {
 			continue
 		}
@@ -723,12 +741,10 @@ func processSellerProducts(seller Seller, walletDiscount int) {
 			continue
 		}
 
-		// Расчет финальной цены
 		finalPrice := calculateFinalPrice(price, sellerDiscount, wbDiscount, walletDiscount)
 		log.Printf("%s - Товар %d - Цена: %.2f, Скидка продавца: %d%%, Скидка WB: %d%%, Финальная цена: %.2f, Минимальная цена: %.2f",
 			seller.Name, product.NmID, price, sellerDiscount, wbDiscount, finalPrice, product.Price)
 
-		// Корректировка при необходимости
 		if finalPrice < product.Price || finalPrice > product.Price+1 {
 			log.Printf("ТРЕБУЕТСЯ КОРРЕКТИРОВКА: Финальная цена %.2f вне диапазона [%.2f, %.2f]",
 				finalPrice, product.Price, product.Price+1)
@@ -744,7 +760,6 @@ func processSellerProducts(seller Seller, walletDiscount int) {
 	}
 }
 
-// Запрос скидки кошелька (возвращает целое число)
 func getWalletDiscount() (int, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://user-grade.wildberries.ru/api/v5/grade?curr=RUB", nil)
@@ -752,17 +767,16 @@ func getWalletDiscount() (int, error) {
 		return 0, err
 	}
 
-	// Устанавливаем заголовки
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("Accept-Language", "ru-RU,ru;q=0.9,zh-CN;q=0.8,zh;q=0.7,en-US;q=0.6,en;q=0.5")
 	req.Header.Set("Authorization", "Bearer "+walletAuthToken)
 	req.Header.Set("Dnt", "1")
-	req.Header.Set("Origin", "  https://www.wildberries.ru  ")
+	req.Header.Set("Origin", "https://www.wildberries.ru")
 	req.Header.Set("Priority", "u=1, i")
-	req.Header.Set("Referer", "https://www.wildberries.ru/  ")
-	req.Header.Set("Sec-Ch-Ua", "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"")
+	req.Header.Set("Referer", "https://www.wildberries.ru/")
+	req.Header.Set("Sec-Ch-Ua", `"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"`)
 	req.Header.Set("Sec-Ch-Ua-Mobile", "?0")
-	req.Header.Set("Sec-Ch-Ua-Platform", "\"macOS\"")
+	req.Header.Set("Sec-Ch-Ua-Platform", `"macOS"`)
 	req.Header.Set("Sec-Fetch-Dest", "empty")
 	req.Header.Set("Sec-Fetch-Mode", "cors")
 	req.Header.Set("Sec-Fetch-Site", "same-site")
@@ -788,11 +802,9 @@ func getWalletDiscount() (int, error) {
 		return 0, fmt.Errorf("скидки кошелька не найдены")
 	}
 
-	// Округляем скидку кошелька до целого числа
 	return int(math.Round(response.Payload.Payments[0].UpridDiscount)), nil
 }
 
-// Запрос информации о товаре (возвращает целые числа для скидок)
 func getProductInfo(nmId int, sellerToken string, cookie string) (price float64, sellerDiscount, wbDiscount int, err error) {
 	url := fmt.Sprintf("https://discounts-prices.wildberries.ru/ns/dp-api/discounts-prices/suppliers/api/v1/nm/info?nmID=%d", nmId)
 
@@ -802,23 +814,22 @@ func getProductInfo(nmId int, sellerToken string, cookie string) (price float64,
 		return 0, 0, 0, err
 	}
 
-	// Устанавливаем заголовки
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("Accept-Language", "ru-RU,ru;q=0.9,zh-CN;q=0.8,zh;q=0.7,en-US;q=0.6,en;q=0.5")
 	req.Header.Set("Authorizev3", sellerToken)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Dnt", "1")
-	req.Header.Set("Origin", "  https://seller.wildberries.ru  ")
+	req.Header.Set("Origin", "https://seller.wildberries.ru")
 	req.Header.Set("Priority", "u=1, i")
-	req.Header.Set("Referer", "https://seller.wildberries.ru/  ")
-	req.Header.Set("Sec-Ch-Ua", "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"")
+	req.Header.Set("Referer", "https://seller.wildberries.ru/")
+	req.Header.Set("Sec-Ch-Ua", `"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"`)
 	req.Header.Set("Sec-Ch-Ua-Mobile", "?0")
-	req.Header.Set("Sec-Ch-Ua-Platform", "\"macOS\"")
+	req.Header.Set("Sec-Ch-Ua-Platform", `"macOS"`)
 	req.Header.Set("Sec-Fetch-Dest", "empty")
 	req.Header.Set("Sec-Fetch-Mode", "cors")
 	req.Header.Set("Sec-Fetch-Site", "same-site")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36")
-	req.Header.Set("Cookie", cookie) // Используем переданные куки
+	req.Header.Set("Cookie", cookie)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -840,58 +851,42 @@ func getProductInfo(nmId int, sellerToken string, cookie string) (price float64,
 		return 0, 0, 0, fmt.Errorf("API вернуло ошибку")
 	}
 
-	// Округляем скидки до целых чисел
 	return response.Data.Info.Price,
 		int(math.Round(response.Data.Info.Discount)),
 		int(math.Round(response.Data.Info.DiscountOnSite)),
 		nil
 }
 
-// Расчет финальной цены (все скидки округляются вверх до рубля)
 func calculateFinalPrice(price float64, sellerDiscount, wbDiscount, walletDiscount int) float64 {
-	// Применяем скидку WB: вычисляем размер и округляем вверх
 	wbDiscountAmount := price * float64(wbDiscount) / 100
 	wbDiscountRounded := math.Ceil(wbDiscountAmount)
 	currentPrice := price - wbDiscountRounded
 
-	// Применяем скидку продавца
 	sellerDiscountAmount := currentPrice * float64(sellerDiscount) / 100
 	sellerDiscountRounded := math.Ceil(sellerDiscountAmount)
 	currentPrice -= sellerDiscountRounded
 
-	// Применяем скидку кошелька
 	walletDiscountAmount := currentPrice * float64(walletDiscount) / 100
 	walletDiscountRounded := math.Ceil(walletDiscountAmount)
 	finalPrice := currentPrice - walletDiscountRounded
 
-	// Округляем финальную цену до копейки
 	return math.Round(finalPrice*100) / 100
 }
 
-// Поиск оптимальной цены и скидки для достижения целевой цены
 func findOptimalPrice(currentPrice float64, currentDiscount, wbDiscount, walletDiscount int, minPrice float64) (float64, int) {
-	const (
-		discountRange = 10 // ±10% для скидки
-	)
+	const discountRange = 10
 
-	// Инициализация лучших значений
 	bestPrice := currentPrice
 	bestDiscount := currentDiscount
 	bestDiff := math.MaxFloat64
 
-	// Перебираем возможные скидки
-	for discountOffset := -discountRange; discountOffset <= discountRange; discountOffset++ {
-		newDiscount := currentDiscount + discountOffset
-
-		// Пропускаем недопустимые значения скидки
+	for offset := -discountRange; offset <= discountRange; offset++ {
+		newDiscount := currentDiscount + offset
 		if newDiscount < 0 || newDiscount > 100 {
 			continue
 		}
 
-		// Находим оптимальную цену для текущей скидки
 		price, diff := findPriceForDiscount(newDiscount, wbDiscount, walletDiscount, minPrice)
-
-		// Если нашли лучший вариант
 		if diff >= 0 && diff < bestDiff {
 			bestPrice = price
 			bestDiscount = newDiscount
@@ -899,7 +894,6 @@ func findOptimalPrice(currentPrice float64, currentDiscount, wbDiscount, walletD
 		}
 	}
 
-	// Если не нашли подходящий вариант
 	if bestDiff == math.MaxFloat64 {
 		return currentPrice, currentDiscount
 	}
@@ -907,17 +901,12 @@ func findOptimalPrice(currentPrice float64, currentDiscount, wbDiscount, walletD
 	return bestPrice, bestDiscount
 }
 
-// Поиск оптимальной цены для фиксированной скидки
 func findPriceForDiscount(discount, wbDiscount, walletDiscount int, minPrice float64) (float64, float64) {
-	// Границы поиска цены
-	low := minPrice
-	high := minPrice * 2 // Верхняя граница - удвоенная минимальная цена
-
+	low, high := minPrice, minPrice*2
 	bestPrice := low
 	bestDiff := math.MaxFloat64
 
-	// Бинарный поиск оптимальной цены
-	for high-low > 0.01 { // Точность до копейки
+	for high-low > 0.01 {
 		mid := (low + high) / 2
 		finalPrice := calculateFinalPrice(mid, discount, wbDiscount, walletDiscount)
 		diff := finalPrice - minPrice
@@ -927,30 +916,22 @@ func findPriceForDiscount(discount, wbDiscount, walletDiscount int, minPrice flo
 				bestDiff = diff
 				bestPrice = mid
 			}
-			high = mid // Пробуем снизить цену
+			high = mid
 		} else {
-			low = mid // Повышаем цену
+			low = mid
 		}
 	}
 
-	// Проверяем последнюю цену
 	finalPrice := calculateFinalPrice(bestPrice, discount, wbDiscount, walletDiscount)
-	finalDiff := finalPrice - minPrice
-
-	return bestPrice, finalDiff
+	return bestPrice, finalPrice - minPrice
 }
 
-// Обновление цены товара через API
 func updateProductPriceAPI(nmId int, newPrice float64, newDiscount int, sellerToken string, cookie string) error {
-	url := "https://discounts-prices.wildberries.ru/ns/dp-api/discounts-prices/suppliers/api/v1/nm/upload/task?checkChange=true"
-
-	// Структура запроса (все поля целочисленные)
 	type PriceData struct {
 		NmID     int `json:"nmID"`
 		Price    int `json:"price"`
 		Discount int `json:"discount"`
 	}
-
 	type RequestPayload struct {
 		Data PriceData `json:"data"`
 	}
@@ -963,37 +944,30 @@ func updateProductPriceAPI(nmId int, newPrice float64, newDiscount int, sellerTo
 		},
 	}
 
-	jsonData, err := json.Marshal(payload)
-	if err != nil {
-		return err
-	}
-
-	// Логируем отправляемые данные
-	log.Printf("Отправка данных для товара %d: %s", nmId, string(jsonData))
+	jsonData, _ := json.Marshal(payload)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", "https://discounts-prices.wildberries.ru/ns/dp-api/discounts-prices/suppliers/api/v1/nm/upload/task?checkChange=true", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err
 	}
 
-	// Устанавливаем заголовки
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("Accept-Language", "ru-RU,ru;q=0.9,zh-CN;q=0.8,zh;q=0.7,en-US;q=0.6,en;q=0.5")
 	req.Header.Set("Authorizev3", sellerToken)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Dnt", "1")
-	req.Header.Set("Origin", "  https://seller.wildberries.ru  ")
+	req.Header.Set("Origin", "https://seller.wildberries.ru")
 	req.Header.Set("Priority", "u=1, i")
-	req.Header.Set("Referer", "https://seller.wildberries.ru/  ")
-	req.Header.Set("Sec-Ch-Ua", "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"")
+	req.Header.Set("Referer", "https://seller.wildberries.ru/")
+	req.Header.Set("Sec-Ch-Ua", `"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"`)
 	req.Header.Set("Sec-Ch-Ua-Mobile", "?0")
-	req.Header.Set("Sec-Ch-Ua-Platform", "\"macOS\"")
+	req.Header.Set("Sec-Ch-Ua-Platform", `"macOS"`)
 	req.Header.Set("Sec-Fetch-Dest", "empty")
 	req.Header.Set("Sec-Fetch-Mode", "cors")
 	req.Header.Set("Sec-Fetch-Site", "same-site")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36")
-	req.Header.Set("Cookie", cookie) // Используем переданные куки
+	req.Header.Set("Cookie", cookie)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -1006,8 +980,6 @@ func updateProductPriceAPI(nmId int, newPrice float64, newDiscount int, sellerTo
 		return fmt.Errorf("статус: %d, тело: %s", resp.StatusCode, string(body))
 	}
 
-	// Логируем отправленные данные
 	log.Printf("Отправка данных для nmID %d: цена=%d, скидка=%d", nmId, int(math.Round(newPrice)), newDiscount)
-
 	return nil
 }
