@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -9,16 +10,141 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 	"time"
+
+	_ "github.com/mattn/go-sqlite3"
+	"gopkg.in/telebot.v3"
 )
 
 // Конфигурация программы
 var (
-	walletAuthToken  = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTc0Mzk3NTMsInVzZXIiOiIzNDE2NDgyMiIsInNoYXJkX2tleSI6IjkiLCJjbGllbnRfaWQiOiJ3YiIsInNlc3Npb25faWQiOiIzODM5NWQ5NDA5MDE0YTM0ODM0MDczMGE1ZmE4NTQ0YiIsInZhbGlkYXRpb25fa2V5IjoiMGQ4OWQzMTEyNjFlODQxMTI3ZTlhOThlNjE3ZjhhODFhMTkwNDQ2MTVmY2I1ZTllN2EwMjRmNmU1ZjM3NjFkZCIsInBob25lIjoiSEF1U1B5amdPZ3JGcEFFWG1CbFJ0Zz09IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzYwNDUyODgsInZlcnNpb24iOjJ9.SOUGPCnGMv2qNfsuri4AI1n6bzbX0sCSFmwap4gVAcaYolvzFIElFDjwBXmFpIJBdjV0W_tyOD5g-vAmF50TyFGmem2YyUkKIuXMJ8bpYUNrcw5JEIFIqoghIV94R9DsS_imfIzFWNm2HKQWQDrEz4uLdiEkWKtwfZHDvLVdCetNrt0dM07_zo4Gc-LJA6wDeEIfKTxEmwWF9lS7A9buXUEUBVXZqfOgCWUnPmv2PdVLC4aO1ZrcKd4JBPYSK7Ug3vzu9p95QuvjuXe5eE8teB57UKHswd1cqm4IpLnh6aXqOAzp7xUPMK90wc8jzGdB7MixYskQG3ugkLiH1PMMfg"
+	walletAuthToken  = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTc0Mzk3NTMsInVzZXIiOiIzNDE2NDgyMiIsInNoYXJkX2tleSI6IjkiLCJjbGllbnRfaWQiOiJ3YiIsInNlc3Npb25faWQiOiIzODM5NWQ5NDA5MDE0YTM0ODM0MDczMGE1ZmE4NTQ0YiIsInZhbGlkYXRpb25fa2V5IjoiMGQ4OWQzMTEyNjFlODQxMTI3ZTlhOThlNjE3ZjhhODFhMTkwNDQ2MTVmY2I1ZTllN2EwMjRmNmU1ZjM3NjFkZCIsInBob25lIjoiSEF1U1B5amdPZ3JGcUFFWG1CbFJ0Zz09IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzYwNDUyODgsInZlcnNpb24iOjJ9.SOUGPCnGMv2qNfsuri4AI1n6bzbX0sCSFmwap4gVAcaYolvzFIElFDjwBXmFpIJBdjV0W_tyOD5g-vAmF50TyFGmem2YyUkKIuXMJ8bpYUNrcw5JEIFIqoghIV94R9DsS_imfIzFWNm2HKQWQDrEz4uLdiEkWKtwfZHDvLVdCetNrt0dM07_zo4Gc-LJA6wDeEIfKTxEmwWF9lS7A9buXUEUBVXZqfOgCWUnPmv2PdVLC4aO1ZrcKd4JBPYSK7Ug3vzu9p95QuvjuXe5eE8teB57UKHswd1cqm4IpLnh6aXqOAzp7xUPMK90wc8jzGdB7MixYskQG3ugkLiH1PMMfg"
 	seller1AuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTY3NTEzNTYsInVzZXIiOiIxNjI0MjYyNCIsInNoYXJkX2tleSI6IjUiLCJjbGllbnRfaWQiOiJzZWxsZXItcG9ydGFsIiwic2Vzc2lvbl9pZCI6ImY2Mzc2MWEyYTA0MjRlMjBiYTRiNzg5YTBlNThkYzJjIiwidmFsaWRhdGlvbl9rZXkiOiI5MDJjYWMzYjczMzQwZGVkMTRmMmNiOGY5ZWE5ZWIyNzJjYjkzZTBmODg4OTUzNGNkNTUzNDIxMDYzZjY1N2M3IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2NzU0MTM4NTYsInZlcnNpb24iOjJ9.sdU1GmWDOzAVm32oT-qhYlD6sPi1LbZwbXYARFUMtxj5-N6nxVWB-kKxTba7lvOew6RnYMHdEYBzIZA1_Z_ZUyPMyhTcPys07bGa9c7V45CisXJGL8RaWyvID4e6_DH4oZmub5QoBynR80ArpCCCeCJf-nXAS3jSUFSaPeMAbja7lN0oZfXP8OuGk91Cn3ORq6V19G2wK0N1HcRDlV0fRGK29R3WQZ8L-obYOey8ltPYdi9x5c4vNjHOqKsfvRC8zigPyxla4XKW3S9NBhMJwUuoTh_2H5FL0YfsZ332AsNKibjWxTIfgNgVtFga_m45uuZZhiYkYEgkiFmS2fevFw"
 	seller2AuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTc1MTQ1MDMsInVzZXIiOiIxNTg0NzMxMSIsInNoYXJkX2tleSI6IjMiLCJjbGllbnRfaWQiOiJzZWxsZXItcG9ydGFsIiwic2Vzc2lvbl9pZCI6ImRlOTFlNmRjODM5YTQ2ZDU4NWNiNDMwZTAyN2NmZWE2IiwidmFsaWRhdGlvbl9rZXkiOiI5OTdjMmQzYzgyODEwYzcwOGIyYjNkZTdlMjM5MzJlOGUzZjk4MzdmYzUwZjYyNjdlMWMzNmNhNDhhY2FkN2U0IiwidXNlcl9yZWdpc3RyYXRpb25fZHQiOjE2ODI0NTY0MjAsInZlcnNpb24iOjJ9.br-0_xHb2Z7TSEnHXX6fyclZ7kEP6QjDkyKYZ5-VZKw5ab7WT17mzuszrxtLHyvNzsSURksAX7QRI82fjtRSMRyyNADbGjI-uW9fcqY8pcg87mdLFbxRVdHR0ytJ5ScsVP7jOae_4RAm5p_qtt9O0vrBSs8OivIkrtFCzjElCVRyFwbcXikBPCd-zs0BsbvWKAxG5F1wvUtvHNBwxYec52-liQjJBrKUYlefNrNBNov4LuKgUz8DPUW6d4mQTLM4gVN6TAAu7hK_tWNr9w4bUwD86iURTBtXNI0N4HdTdkSlnaH7C4FqLZnXc5HcTt91hmDCoLfEuCPlC8fveoK1LQ"
-	// Список товаров для первого продавца [nmID: минимальная_цена]
-	productsSeller1 = map[int]float64{
+
+	// Telegram IDs пользователей
+	seller1TelegramID = int64(331871462) // ID первого продавца
+	seller2TelegramID = int64(599835867) // ID второго продавца
+	adminTelegramID   = int64(3572936)   // ID администратора
+
+	// Telegram bot token
+	telegramBotToken = "8083101312:AAHzCABhhWzbv5kEVxSQV6-rjNkF-9YuX7M" //  Токен бота
+	// Настройки программы
+	checkInterval = 5 * time.Minute // Интервал проверки цен
+)
+
+// Структура для хранения данных продавца
+type Seller struct {
+	ID         int
+	Name       string
+	Token      string
+	Cookie     string
+	TelegramID int64
+}
+
+// Структура для хранения товара
+type Product struct {
+	ID       int
+	NmID     int
+	Price    float64
+	Enabled  bool
+	SellerID int
+}
+
+// Структуры для разбора ответов API
+type WalletResponse struct {
+	Payload struct {
+		Payments []struct {
+			UpridDiscount float64 `json:"uprid_discount"`
+		} `json:"payments"`
+	} `json:"payload"`
+}
+
+type ProductInfoResponse struct {
+	Data struct {
+		Info struct {
+			Price          float64 `json:"price"`
+			Discount       float64 `json:"discount"`
+			DiscountOnSite float64 `json:"discountOnSite"`
+		} `json:"info"`
+	} `json:"data"`
+	Error bool `json:"error"`
+}
+
+// Глобальные переменные
+var (
+	db      *sql.DB
+	bot     *telebot.Bot
+	sellers []Seller
+)
+
+func initDB() error {
+	var err error
+	db, err = sql.Open("sqlite3", "./products.db")
+	if err != nil {
+		return err
+	}
+
+	// Создание таблиц
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS sellers (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL,
+			token TEXT NOT NULL,
+			cookie TEXT NOT NULL,
+			telegram_id INTEGER NOT NULL
+		);
+		
+		CREATE TABLE IF NOT EXISTS products (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			nm_id INTEGER NOT NULL UNIQUE,
+			price REAL NOT NULL,
+			enabled BOOLEAN NOT NULL DEFAULT 1,
+			seller_id INTEGER NOT NULL,
+			FOREIGN KEY (seller_id) REFERENCES sellers (id)
+		);
+	`)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func loadInitialData() error {
+	// Инициализация продавцов
+	sellers = []Seller{
+		{
+			ID:         1,
+			Name:       "Первый продавец",
+			Token:      seller1AuthToken,
+			Cookie:     "_wbauid=1389459591727788866; ___wbu=2afbdd4a-2b25-44d0-a488-d2343f188ea6.1727788866; wbx-validation-key=a4aeb81b-3aea-4bca-a373-b724a179a919; _ym_uid=1726235106355624516; _ym_d=1740053345; external-locale=ru; x-supplier-id-external=be41cd8a-9260-412d-9445-cc8cf1d3aad0",
+			TelegramID: seller1TelegramID,
+		},
+		{
+			ID:         2,
+			Name:       "Второй продавец",
+			Token:      seller2AuthToken,
+			Cookie:     "_wbauid=5666810631754830452; wbx-validation-key=f205c486-d051-42b8-8a77-86bb72e60283; x-supplier-id-external=df62fdc4-c58a-41dc-9aed-caf62c76df5f",
+			TelegramID: seller2TelegramID,
+		},
+	}
+
+	// Сохранение продавцов в БД
+	for _, seller := range sellers {
+		_, err := db.Exec(`
+			INSERT OR IGNORE INTO sellers (id, name, token, cookie, telegram_id) 
+			VALUES (?, ?, ?, ?, ?)`,
+			seller.ID, seller.Name, seller.Token, seller.Cookie, seller.TelegramID)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Загрузка начальных товаров для первого продавца
+	productsSeller1 := map[int]float64{
 		439740235: 598.00,
 		363561833: 2431.00,
 		355039724: 2756.00,
@@ -45,8 +171,8 @@ var (
 		500564205: 826.00,
 	}
 
-	// Список товаров для второго продавца [nmID: минимальная_цена]
-	productsSeller2 = map[int]float64{
+	// Загрузка начальных товаров для второго продавца
+	productsSeller2 := map[int]float64{
 		486062217: 800.00,
 		483028809: 640.00,
 		473997083: 550.00,
@@ -67,7 +193,7 @@ var (
 		496076265: 670.00,
 		496941899: 871.00,
 		496570292: 735.00,
-		499065435: 2479.00,
+		499065435: 2470.00,
 		505166842: 598.00,
 		517572489: 3300.0,
 		524447299: 2236.0,
@@ -75,38 +201,437 @@ var (
 		525977899: 2691.0,
 		534976766: 1378.0,
 		528079095: 3627.0,
+		497033245: 871.0,
 	}
 
-	// Настройки программы
-	checkInterval = 5 * time.Minute // Интервал проверки цен
-)
+	// Сохранение товаров в БД
+	for nmID, price := range productsSeller1 {
+		_, err := db.Exec(`
+			INSERT OR IGNORE INTO products (nm_id, price, enabled, seller_id) 
+			VALUES (?, ?, ?, ?)`,
+			nmID, price, true, 1)
+		if err != nil {
+			return err
+		}
+	}
 
-// Структура для хранения данных продавца
-type Seller struct {
-	Name     string
-	Token    string
-	Cookie   string
-	Products map[int]float64
+	for nmID, price := range productsSeller2 {
+		_, err := db.Exec(`
+			INSERT OR IGNORE INTO products (nm_id, price, enabled, seller_id) 
+			VALUES (?, ?, ?, ?)`,
+			nmID, price, true, 2)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
-// Структуры для разбора ответов API
-type WalletResponse struct {
-	Payload struct {
-		Payments []struct {
-			UpridDiscount float64 `json:"uprid_discount"`
-		} `json:"payments"`
-	} `json:"payload"`
+func getSellerByTelegramID(telegramID int64) (*Seller, error) {
+	for i := range sellers {
+		if sellers[i].TelegramID == telegramID || telegramID == adminTelegramID {
+			return &sellers[i], nil
+		}
+	}
+	return nil, fmt.Errorf("пользователь не найден")
 }
 
-type ProductInfoResponse struct {
-	Data struct {
-		Info struct {
-			Price          float64 `json:"price"`
-			Discount       float64 `json:"discount"`
-			DiscountOnSite float64 `json:"discountOnSite"`
-		} `json:"info"`
-	} `json:"data"`
-	Error bool `json:"error"`
+func getProductsBySellerID(sellerID int) ([]Product, error) {
+	rows, err := db.Query("SELECT id, nm_id, price, enabled, seller_id FROM products WHERE seller_id = ?", sellerID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var products []Product
+	for rows.Next() {
+		var p Product
+		err := rows.Scan(&p.ID, &p.NmID, &p.Price, &p.Enabled, &p.SellerID)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, p)
+	}
+
+	return products, nil
+}
+
+func getAllProducts() ([]Product, error) {
+	rows, err := db.Query("SELECT id, nm_id, price, enabled, seller_id FROM products")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var products []Product
+	for rows.Next() {
+		var p Product
+		err := rows.Scan(&p.ID, &p.NmID, &p.Price, &p.Enabled, &p.SellerID)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, p)
+	}
+
+	return products, nil
+}
+
+func addProduct(nmID int, price float64, sellerID int) error {
+	_, err := db.Exec("INSERT INTO products (nm_id, price, enabled, seller_id) VALUES (?, ?, ?, ?)",
+		nmID, price, true, sellerID)
+	return err
+}
+
+func updateProductPriceByNmID(nmID int, newPrice float64, sellerID int) error {
+	result, err := db.Exec("UPDATE products SET price = ? WHERE nm_id = ? AND seller_id = ?",
+		newPrice, nmID, sellerID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return fmt.Errorf("товар с nmID=%d для продавца %d не найден", nmID, sellerID)
+	}
+
+	return nil
+}
+
+func toggleProductStatusByNmID(nmID int, sellerID int) error {
+	_, err := db.Exec("UPDATE products SET enabled = NOT enabled WHERE nm_id = ? AND seller_id = ?",
+		nmID, sellerID)
+	return err
+}
+
+func deleteProductByNmID(nmID int, sellerID int) error {
+	_, err := db.Exec("DELETE FROM products WHERE nm_id = ? AND seller_id = ?",
+		nmID, sellerID)
+	return err
+}
+
+func getProductByNmID(nmID int, sellerID int) (*Product, error) {
+	var p Product
+	err := db.QueryRow("SELECT id, nm_id, price, enabled, seller_id FROM products WHERE nm_id = ? AND seller_id = ?",
+		nmID, sellerID).Scan(&p.ID, &p.NmID, &p.Price, &p.Enabled, &p.SellerID)
+	if err != nil {
+		return nil, err
+	}
+	return &p, nil
+}
+
+func setupTelegramBot() error {
+	var err error
+	bot, err = telebot.NewBot(telebot.Settings{
+		Token:  telegramBotToken,
+		Poller: &telebot.LongPoller{Timeout: 10 * time.Second},
+	})
+	if err != nil {
+		return err
+	}
+
+	// Обработчики команд
+	bot.Handle("/start", func(c telebot.Context) error {
+		return c.Send("Добро пожаловать в репрайсер Wildberries! Доступные команды:\n" +
+			"/products - список ваших товаров\n" +
+			"/add nmID цена - добавить товар (например: /add 123456789 999.99)\n" +
+			"/price nmID новая_цена - изменить цену товара\n" +
+			"/toggle nmID - включить/выключить товар\n" +
+			"/delete nmID - удалить товар")
+	})
+
+	bot.Handle("/products", handleProductsList)
+	bot.Handle("/add", handleAddProduct)
+	bot.Handle("/price", handleUpdatePrice)
+	bot.Handle("/toggle", handleToggleProduct)
+	bot.Handle("/delete", handleDeleteProduct)
+
+	return nil
+}
+
+func handleProductsList(c telebot.Context) error {
+	telegramID := c.Sender().ID
+	seller, err := getSellerByTelegramID(telegramID)
+	if err != nil {
+		return c.Send("У вас нет доступа к этой функции.")
+	}
+
+	var products []Product
+	if telegramID == adminTelegramID {
+		products, err = getAllProducts()
+	} else {
+		products, err = getProductsBySellerID(seller.ID)
+	}
+
+	if err != nil {
+		return c.Send("Ошибка получения списка товаров.")
+	}
+
+	if len(products) == 0 {
+		return c.Send("У вас пока нет товаров.")
+	}
+
+	var message strings.Builder
+	message.WriteString("Ваши товары:\n\n")
+
+	for _, product := range products {
+		status := "✅ Вкл"
+		if !product.Enabled {
+			status = "❌ Выкл"
+		}
+
+		sellerName := ""
+		if telegramID == adminTelegramID {
+			for _, s := range sellers {
+				if s.ID == product.SellerID {
+					sellerName = fmt.Sprintf(" (%s)", s.Name)
+					break
+				}
+			}
+		}
+
+		message.WriteString(fmt.Sprintf("NM: %d | Цена: %.2f | %s%s\n",
+			product.NmID, product.Price, status, sellerName))
+	}
+
+	return c.Send(message.String())
+}
+
+func handleAddProduct(c telebot.Context) error {
+	telegramID := c.Sender().ID
+	seller, err := getSellerByTelegramID(telegramID)
+	if err != nil {
+		return c.Send("У вас нет доступа к этой функции.")
+	}
+
+	args := strings.Fields(c.Message().Text)[1:]
+	if len(args) < 2 {
+		return c.Send("Использование: /add nmID цена")
+	}
+
+	nmID, err := strconv.Atoi(args[0])
+	if err != nil {
+		return c.Send("Неверный формат nmID.")
+	}
+
+	price, err := strconv.ParseFloat(args[1], 64)
+	if err != nil {
+		return c.Send("Неверный формат цены.")
+	}
+
+	targetSellerID := seller.ID
+	if telegramID == adminTelegramID && len(args) > 2 {
+		targetSellerID, err = strconv.Atoi(args[2])
+		if err != nil {
+			return c.Send("Неверный ID продавца.")
+		}
+	}
+
+	err = addProduct(nmID, price, targetSellerID)
+	if err != nil {
+		return c.Send("Ошибка добавления товара.")
+	}
+
+	return c.Send(fmt.Sprintf("Товар %d добавлен с ценой %.2f", nmID, price))
+}
+
+func handleUpdatePrice(c telebot.Context) error {
+	telegramID := c.Sender().ID
+	seller, err := getSellerByTelegramID(telegramID)
+	if err != nil {
+		return c.Send("У вас нет доступа к этой функции.")
+	}
+
+	args := strings.Fields(c.Message().Text)[1:]
+	if len(args) < 2 {
+		return c.Send("Использование: /price nmID новая_цена")
+	}
+
+	nmID, err := strconv.Atoi(args[0])
+	if err != nil {
+		return c.Send("Неверный формат nmID.")
+	}
+
+	newPrice, err := strconv.ParseFloat(args[1], 64)
+	if err != nil {
+		return c.Send("Неверный формат цены.")
+	}
+
+	// Проверка прав доступа к товару
+	targetSellerID := seller.ID
+	if telegramID == adminTelegramID {
+		product, err := getProductByNmIDForAnySeller(nmID)
+		if err != nil {
+			return c.Send("Товар не найден.")
+		}
+		targetSellerID = product.SellerID
+	} else {
+		_, err = getProductByNmID(nmID, seller.ID)
+		if err != nil {
+			return c.Send("Товар не найден или у вас нет к нему доступа.")
+		}
+	}
+
+	// Обновляем цену в БД
+	err = updateProductPriceByNmID(nmID, newPrice, targetSellerID)
+	if err != nil {
+		return c.Send("Ошибка обновления цены.")
+	}
+
+	// Отправляем подтверждение
+	msg := fmt.Sprintf("Цена товара NM %d обновлена на %.2f", nmID, newPrice)
+	_ = c.Send(msg)
+
+	// === ДОБАВЛЕНО: Принудительная немедленная коррекция ===
+
+	// Находим продавца, которому принадлежит товар
+	var targetSeller *Seller
+	for i := range sellers {
+		if sellers[i].ID == targetSellerID {
+			targetSeller = &sellers[i]
+			break
+		}
+	}
+	if targetSeller == nil {
+		log.Printf("Продавец с ID %d не найден", targetSellerID)
+		return nil
+	}
+
+	// Получаем информацию о товаре с WB
+	price, sellerDiscount, wbDiscount, err := getProductInfo(nmID, targetSeller.Token, targetSeller.Cookie)
+	if err != nil {
+		log.Printf("Не удалось получить данные с WB для товара %d: %v", nmID, err)
+		return nil
+	}
+
+	// Получаем скидку кошелька
+	walletDiscount, err := getWalletDiscount()
+	if err != nil {
+		log.Printf("Не удалось получить скидку кошелька: %v", err)
+		walletDiscount = 0 // продолжаем с 0%
+	}
+
+	// Рассчитываем финальную цену
+	finalPrice := calculateFinalPrice(price, sellerDiscount, wbDiscount, walletDiscount)
+
+	// Проверяем, нужно ли корректировать цену
+	if finalPrice < newPrice || finalPrice > newPrice+1 {
+		log.Printf("[Мгновенная коррекция] Финальная цена %.2f вне диапазона [%.2f, %.2f] для товара %d",
+			finalPrice, newPrice, newPrice+1, nmID)
+
+		optimalPrice, optimalDiscount := findOptimalPrice(price, sellerDiscount, wbDiscount, walletDiscount, newPrice)
+		updateErr := updateProductPriceAPI(nmID, optimalPrice, optimalDiscount, targetSeller.Token, targetSeller.Cookie)
+		if updateErr != nil {
+			log.Printf("Ошибка API при мгновенной коррекции товара %d: %v", nmID, updateErr)
+		} else {
+			log.Printf("Мгновенно обновлено: цена=%.2f, скидка=%d%% для товара %d", optimalPrice, optimalDiscount, nmID)
+		}
+	} else {
+		log.Printf("Товар %d: финальная цена %.2f уже в допустимом диапазоне, коррекция не требуется", nmID, finalPrice)
+	}
+
+	return nil
+}
+
+func handleToggleProduct(c telebot.Context) error {
+	telegramID := c.Sender().ID
+	seller, err := getSellerByTelegramID(telegramID)
+	if err != nil {
+		return c.Send("У вас нет доступа к этой функции.")
+	}
+
+	args := strings.Fields(c.Message().Text)[1:]
+	if len(args) < 1 {
+		return c.Send("Использование: /toggle nmID")
+	}
+
+	nmID, err := strconv.Atoi(args[0])
+	if err != nil {
+		return c.Send("Неверный формат nmID.")
+	}
+
+	// Проверка прав доступа к товару
+	targetSellerID := seller.ID
+	if telegramID == adminTelegramID {
+		// Админ может работать с товарами любого продавца
+		product, err := getProductByNmIDForAnySeller(nmID)
+		if err != nil {
+			return c.Send("Товар не найден.")
+		}
+		targetSellerID = product.SellerID
+	} else {
+		// Обычный пользователь может работать только со своими товарами
+		_, err = getProductByNmID(nmID, seller.ID)
+		if err != nil {
+			return c.Send("Товар не найден или у вас нет к нему доступа.")
+		}
+	}
+
+	err = toggleProductStatusByNmID(nmID, targetSellerID)
+	if err != nil {
+		return c.Send("Ошибка изменения статуса товара.")
+	}
+
+	// Получаем обновленный статус
+	updatedProduct, _ := getProductByNmID(nmID, targetSellerID)
+	status := "включен"
+	if !updatedProduct.Enabled {
+		status = "выключен"
+	}
+
+	return c.Send(fmt.Sprintf("Товар NM %d %s", nmID, status))
+}
+
+func handleDeleteProduct(c telebot.Context) error {
+	telegramID := c.Sender().ID
+	seller, err := getSellerByTelegramID(telegramID)
+	if err != nil {
+		return c.Send("У вас нет доступа к этой функции.")
+	}
+
+	args := strings.Fields(c.Message().Text)[1:]
+	if len(args) < 1 {
+		return c.Send("Использование: /delete nmID")
+	}
+
+	nmID, err := strconv.Atoi(args[0])
+	if err != nil {
+		return c.Send("Неверный формат nmID.")
+	}
+
+	// Проверка прав доступа к товару
+	targetSellerID := seller.ID
+	if telegramID == adminTelegramID {
+		// Админ может работать с товарами любого продавца
+		product, err := getProductByNmIDForAnySeller(nmID)
+		if err != nil {
+			return c.Send("Товар не найден.")
+		}
+		targetSellerID = product.SellerID
+	} else {
+		// Обычный пользователь может работать только со своими товарами
+		_, err = getProductByNmID(nmID, seller.ID)
+		if err != nil {
+			return c.Send("Товар не найден или у вас нет к нему доступа.")
+		}
+	}
+
+	err = deleteProductByNmID(nmID, targetSellerID)
+	if err != nil {
+		return c.Send("Ошибка удаления товара.")
+	}
+
+	return c.Send(fmt.Sprintf("Товар NM %d удален", nmID))
+}
+
+func getProductByNmIDForAnySeller(nmID int) (*Product, error) {
+	var p Product
+	err := db.QueryRow("SELECT id, nm_id, price, enabled, seller_id FROM products WHERE nm_id = ?",
+		nmID).Scan(&p.ID, &p.NmID, &p.Price, &p.Enabled, &p.SellerID)
+	if err != nil {
+		return nil, err
+	}
+	return &p, nil
 }
 
 func main() {
@@ -118,26 +643,36 @@ func main() {
 	defer logFile.Close()
 	log.SetOutput(logFile)
 
-	// Инициализация продавцов
-	sellers := []Seller{
-		{
-			Name:     "Первый продавец",
-			Token:    seller1AuthToken,
-			Cookie:   "_wbauid=1389459591727788866; ___wbu=2afbdd4a-2b25-44d0-a488-d2343f188ea6.1727788866; wbx-validation-key=a4aeb81b-3aea-4bca-a373-b724a179a919; _ym_uid=1726235106355624516; _ym_d=1740053345; external-locale=ru; x-supplier-id-external=be41cd8a-9260-412d-9445-cc8cf1d3aad0",
-			Products: productsSeller1,
-		},
-		{
-			Name:     "Второй продавец",
-			Token:    seller2AuthToken,
-			Cookie:   "_wbauid=5666810631754830452; wbx-validation-key=f205c486-d051-42b8-8a77-86bb72e60283; x-supplier-id-external=df62fdc4-c58a-41dc-9aed-caf62c76df5f",
-			Products: productsSeller2,
-		},
+	// Инициализация базы данных
+	err = initDB()
+	if err != nil {
+		log.Fatalf("Ошибка инициализации БД: %v", err)
+	}
+
+	// Загрузка начальных данных
+	err = loadInitialData()
+	if err != nil {
+		log.Fatalf("Ошибка загрузки начальных данных: %v", err)
+	}
+
+	// Настройка Telegram бота
+	err = setupTelegramBot()
+	if err != nil {
+		log.Printf("Предупреждение: Не удалось настроить Telegram бота: %v", err)
+		log.Printf("Продолжаем работу без бота...")
+	} else {
+		// Запуск бота в отдельной горутине
+		go func() {
+			log.Println("Запуск Telegram бота...")
+			bot.Start()
+		}()
 	}
 
 	log.Println("Запуск репрайсера Wildberries")
 	log.Printf("Количество продавцов: %d", len(sellers))
 	for i, seller := range sellers {
-		log.Printf("Продавец %d: %s, товаров: %d", i+1, seller.Name, len(seller.Products))
+		products, _ := getProductsBySellerID(seller.ID)
+		log.Printf("Продавец %d: %s, товаров: %d", i+1, seller.Name, len(products))
 	}
 	log.Printf("Интервал проверки: %v\n", checkInterval)
 
@@ -168,28 +703,40 @@ func main() {
 func processSellerProducts(seller Seller, walletDiscount int) {
 	log.Printf("--- Обработка товаров для %s ---", seller.Name)
 
+	// Получаем товары продавца из БД
+	products, err := getProductsBySellerID(seller.ID)
+	if err != nil {
+		log.Printf("Ошибка получения товаров для %s: %v", seller.Name, err)
+		return
+	}
+
 	// Проверка каждого товара
-	for nmId, minPrice := range seller.Products {
-		price, sellerDiscount, wbDiscount, err := getProductInfo(nmId, seller.Token, seller.Cookie)
+	for _, product := range products {
+		// Пропускаем выключенные товары
+		if !product.Enabled {
+			continue
+		}
+
+		price, sellerDiscount, wbDiscount, err := getProductInfo(product.NmID, seller.Token, seller.Cookie)
 		if err != nil {
-			log.Printf("Ошибка получения информации о товаре %d: %v", nmId, err)
+			log.Printf("Ошибка получения информации о товаре %d: %v", product.NmID, err)
 			continue
 		}
 
 		// Расчет финальной цены
 		finalPrice := calculateFinalPrice(price, sellerDiscount, wbDiscount, walletDiscount)
 		log.Printf("%s - Товар %d - Цена: %.2f, Скидка продавца: %d%%, Скидка WB: %d%%, Финальная цена: %.2f, Минимальная цена: %.2f",
-			seller.Name, nmId, price, sellerDiscount, wbDiscount, finalPrice, minPrice)
+			seller.Name, product.NmID, price, sellerDiscount, wbDiscount, finalPrice, product.Price)
 
 		// Корректировка при необходимости
-		if finalPrice < minPrice || finalPrice > minPrice+1 {
+		if finalPrice < product.Price || finalPrice > product.Price+1 {
 			log.Printf("ТРЕБУЕТСЯ КОРРЕКТИРОВКА: Финальная цена %.2f вне диапазона [%.2f, %.2f]",
-				finalPrice, minPrice, minPrice+1)
+				finalPrice, product.Price, product.Price+1)
 
-			newPrice, newDiscount := findOptimalPrice(price, sellerDiscount, wbDiscount, walletDiscount, minPrice)
-			err = updateProductPrice(nmId, newPrice, newDiscount, seller.Token, seller.Cookie)
+			newPrice, newDiscount := findOptimalPrice(price, sellerDiscount, wbDiscount, walletDiscount, product.Price)
+			err = updateProductPriceAPI(product.NmID, newPrice, newDiscount, seller.Token, seller.Cookie)
 			if err != nil {
-				log.Printf("Ошибка обновления цены для товара %d: %v", nmId, err)
+				log.Printf("Ошибка обновления цены для товара %d: %v", product.NmID, err)
 			} else {
 				log.Printf("Цена обновлена: Новая цена = %.2f, Новая скидка = %d%%", newPrice, newDiscount)
 			}
@@ -210,9 +757,9 @@ func getWalletDiscount() (int, error) {
 	req.Header.Set("Accept-Language", "ru-RU,ru;q=0.9,zh-CN;q=0.8,zh;q=0.7,en-US;q=0.6,en;q=0.5")
 	req.Header.Set("Authorization", "Bearer "+walletAuthToken)
 	req.Header.Set("Dnt", "1")
-	req.Header.Set("Origin", "https://www.wildberries.ru")
+	req.Header.Set("Origin", "  https://www.wildberries.ru  ")
 	req.Header.Set("Priority", "u=1, i")
-	req.Header.Set("Referer", "https://www.wildberries.ru/")
+	req.Header.Set("Referer", "https://www.wildberries.ru/  ")
 	req.Header.Set("Sec-Ch-Ua", "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"")
 	req.Header.Set("Sec-Ch-Ua-Mobile", "?0")
 	req.Header.Set("Sec-Ch-Ua-Platform", "\"macOS\"")
@@ -261,9 +808,9 @@ func getProductInfo(nmId int, sellerToken string, cookie string) (price float64,
 	req.Header.Set("Authorizev3", sellerToken)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Dnt", "1")
-	req.Header.Set("Origin", "https://seller.wildberries.ru")
+	req.Header.Set("Origin", "  https://seller.wildberries.ru  ")
 	req.Header.Set("Priority", "u=1, i")
-	req.Header.Set("Referer", "https://seller.wildberries.ru/")
+	req.Header.Set("Referer", "https://seller.wildberries.ru/  ")
 	req.Header.Set("Sec-Ch-Ua", "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"")
 	req.Header.Set("Sec-Ch-Ua-Mobile", "?0")
 	req.Header.Set("Sec-Ch-Ua-Platform", "\"macOS\"")
@@ -393,8 +940,8 @@ func findPriceForDiscount(discount, wbDiscount, walletDiscount int, minPrice flo
 	return bestPrice, finalDiff
 }
 
-// Обновление цены товара
-func updateProductPrice(nmId int, newPrice float64, newDiscount int, sellerToken string, cookie string) error {
+// Обновление цены товара через API
+func updateProductPriceAPI(nmId int, newPrice float64, newDiscount int, sellerToken string, cookie string) error {
 	url := "https://discounts-prices.wildberries.ru/ns/dp-api/discounts-prices/suppliers/api/v1/nm/upload/task?checkChange=true"
 
 	// Структура запроса (все поля целочисленные)
@@ -436,9 +983,9 @@ func updateProductPrice(nmId int, newPrice float64, newDiscount int, sellerToken
 	req.Header.Set("Authorizev3", sellerToken)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Dnt", "1")
-	req.Header.Set("Origin", "https://seller.wildberries.ru")
+	req.Header.Set("Origin", "  https://seller.wildberries.ru  ")
 	req.Header.Set("Priority", "u=1, i")
-	req.Header.Set("Referer", "https://seller.wildberries.ru/")
+	req.Header.Set("Referer", "https://seller.wildberries.ru/  ")
 	req.Header.Set("Sec-Ch-Ua", "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"")
 	req.Header.Set("Sec-Ch-Ua-Mobile", "?0")
 	req.Header.Set("Sec-Ch-Ua-Platform", "\"macOS\"")
