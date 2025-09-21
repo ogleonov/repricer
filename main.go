@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	_ "github.com/glebarez/sqlite" // Это самый надежный драйвер без CGO
 	"gopkg.in/telebot.v3"
 )
 
@@ -85,7 +86,12 @@ func initDB() error {
 	var err error
 	db, err = sql.Open("sqlite", "./products.db")
 	if err != nil {
-		return err
+		return fmt.Errorf("ошибка открытия БД: %w", err)
+	}
+
+	// Проверяем подключение
+	if err = db.Ping(); err != nil {
+		return fmt.Errorf("ошибка подключения к БД: %w", err)
 	}
 
 	// Создание таблиц
@@ -109,7 +115,7 @@ func initDB() error {
 		);
 	`)
 	if err != nil {
-		return err
+		return fmt.Errorf("ошибка создания таблиц: %w", err)
 	}
 
 	return nil
@@ -141,7 +147,7 @@ func loadInitialData() error {
 			VALUES (?, ?, ?, ?, ?)`,
 			seller.ID, seller.Name, seller.Token, seller.Cookie, seller.TelegramID)
 		if err != nil {
-			return err
+			return fmt.Errorf("ошибка сохранения продавца %d: %w", seller.ID, err)
 		}
 	}
 
@@ -219,7 +225,7 @@ func loadInitialData() error {
 			VALUES (?, ?, ?, ?, ?)`,
 			nmID, data.Name, data.Price, true, 1)
 		if err != nil {
-			return err
+			return fmt.Errorf("ошибка сохранения товара %d для продавца 1: %w", nmID, err)
 		}
 	}
 
@@ -229,7 +235,7 @@ func loadInitialData() error {
 			VALUES (?, ?, ?, ?, ?)`,
 			nmID, data.Name, data.Price, true, 2)
 		if err != nil {
-			return err
+			return fmt.Errorf("ошибка сохранения товара %d для продавца 2: %w", nmID, err)
 		}
 	}
 
@@ -248,7 +254,7 @@ func getSellerByTelegramID(telegramID int64) (*Seller, error) {
 func getProductsBySellerID(sellerID int) ([]Product, error) {
 	rows, err := db.Query("SELECT id, nm_id, name, price, enabled, seller_id FROM products WHERE seller_id = ?", sellerID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ошибка запроса к БД: %w", err)
 	}
 	defer rows.Close()
 
@@ -257,7 +263,7 @@ func getProductsBySellerID(sellerID int) ([]Product, error) {
 		var p Product
 		err := rows.Scan(&p.ID, &p.NmID, &p.Name, &p.Price, &p.Enabled, &p.SellerID)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("ошибка сканирования строки: %w", err)
 		}
 		products = append(products, p)
 	}
@@ -268,7 +274,7 @@ func getProductsBySellerID(sellerID int) ([]Product, error) {
 func getAllProducts() ([]Product, error) {
 	rows, err := db.Query("SELECT id, nm_id, name, price, enabled, seller_id FROM products")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ошибка запроса к БД: %w", err)
 	}
 	defer rows.Close()
 
@@ -277,7 +283,7 @@ func getAllProducts() ([]Product, error) {
 		var p Product
 		err := rows.Scan(&p.ID, &p.NmID, &p.Name, &p.Price, &p.Enabled, &p.SellerID)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("ошибка сканирования строки: %w", err)
 		}
 		products = append(products, p)
 	}
@@ -288,14 +294,17 @@ func getAllProducts() ([]Product, error) {
 func addProduct(nmID int, price float64, sellerID int, name string) error {
 	_, err := db.Exec("INSERT OR REPLACE INTO products (nm_id, name, price, enabled, seller_id) VALUES (?, ?, ?, ?, ?)",
 		nmID, name, price, true, sellerID)
-	return err
+	if err != nil {
+		return fmt.Errorf("ошибка добавления товара: %w", err)
+	}
+	return nil
 }
 
 func updateProductPriceByNmID(nmID int, newPrice float64, sellerID int) error {
 	result, err := db.Exec("UPDATE products SET price = ? WHERE nm_id = ? AND seller_id = ?",
 		newPrice, nmID, sellerID)
 	if err != nil {
-		return err
+		return fmt.Errorf("ошибка обновления цены: %w", err)
 	}
 
 	rowsAffected, _ := result.RowsAffected()
@@ -309,7 +318,7 @@ func updateProductPriceByNmID(nmID int, newPrice float64, sellerID int) error {
 func updateProductName(nmID int, name string, sellerID int) error {
 	result, err := db.Exec("UPDATE products SET name = ? WHERE nm_id = ? AND seller_id = ?", name, nmID, sellerID)
 	if err != nil {
-		return err
+		return fmt.Errorf("ошибка обновления названия: %w", err)
 	}
 
 	rowsAffected, _ := result.RowsAffected()
@@ -323,13 +332,19 @@ func updateProductName(nmID int, name string, sellerID int) error {
 func toggleProductStatusByNmID(nmID int, sellerID int) error {
 	_, err := db.Exec("UPDATE products SET enabled = NOT enabled WHERE nm_id = ? AND seller_id = ?",
 		nmID, sellerID)
-	return err
+	if err != nil {
+		return fmt.Errorf("ошибка изменения статуса: %w", err)
+	}
+	return nil
 }
 
 func deleteProductByNmID(nmID int, sellerID int) error {
 	_, err := db.Exec("DELETE FROM products WHERE nm_id = ? AND seller_id = ?",
 		nmID, sellerID)
-	return err
+	if err != nil {
+		return fmt.Errorf("ошибка удаления товара: %w", err)
+	}
+	return nil
 }
 
 func getProductByNmID(nmID int, sellerID int) (*Product, error) {
@@ -337,7 +352,7 @@ func getProductByNmID(nmID int, sellerID int) (*Product, error) {
 	err := db.QueryRow("SELECT id, nm_id, name, price, enabled, seller_id FROM products WHERE nm_id = ? AND seller_id = ?",
 		nmID, sellerID).Scan(&p.ID, &p.NmID, &p.Name, &p.Price, &p.Enabled, &p.SellerID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ошибка получения товара: %w", err)
 	}
 	return &p, nil
 }
@@ -347,7 +362,7 @@ func getProductByNmIDForAnySeller(nmID int) (*Product, error) {
 	err := db.QueryRow("SELECT id, nm_id, name, price, enabled, seller_id FROM products WHERE nm_id = ?",
 		nmID).Scan(&p.ID, &p.NmID, &p.Name, &p.Price, &p.Enabled, &p.SellerID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ошибка получения товара: %w", err)
 	}
 	return &p, nil
 }
@@ -359,7 +374,7 @@ func setupTelegramBot() error {
 		Poller: &telebot.LongPoller{Timeout: 10 * time.Second},
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("ошибка инициализации бота: %w", err)
 	}
 
 	// Обработчики команд
@@ -667,19 +682,27 @@ func main() {
 	defer logFile.Close()
 	log.SetOutput(logFile)
 
+	log.Println("Проверка доступности SQLite драйвера...")
+	// Проверяем, что драйвер зарегистрирован
+	drivers := sql.Drivers()
+	log.Printf("Доступные драйверы: %v", drivers)
+
 	// Инициализация базы данных
+	log.Println("Инициализация базы данных...")
 	err = initDB()
 	if err != nil {
 		log.Fatalf("Ошибка инициализации БД: %v", err)
 	}
 
 	// Загрузка начальных данных
+	log.Println("Загрузка начальных данных...")
 	err = loadInitialData()
 	if err != nil {
 		log.Fatalf("Ошибка загрузки начальных данных: %v", err)
 	}
 
 	// Настройка Telegram бота
+	log.Println("Настройка Telegram бота...")
 	err = setupTelegramBot()
 	if err != nil {
 		log.Printf("Предупреждение: Не удалось настроить Telegram бота: %v", err)
@@ -770,9 +793,9 @@ func getWalletDiscount() (int, error) {
 	req.Header.Set("Accept-Language", "ru-RU,ru;q=0.9,zh-CN;q=0.8,zh;q=0.7,en-US;q=0.6,en;q=0.5")
 	req.Header.Set("Authorization", "Bearer "+walletAuthToken)
 	req.Header.Set("Dnt", "1")
-	req.Header.Set("Origin", "https://www.wildberries.ru")
+	req.Header.Set("Origin", "  https://www.wildberries.ru  ")
 	req.Header.Set("Priority", "u=1, i")
-	req.Header.Set("Referer", "https://www.wildberries.ru/")
+	req.Header.Set("Referer", "https://www.wildberries.ru/  ")
 	req.Header.Set("Sec-Ch-Ua", `"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"`)
 	req.Header.Set("Sec-Ch-Ua-Mobile", "?0")
 	req.Header.Set("Sec-Ch-Ua-Platform", `"macOS"`)
@@ -818,9 +841,9 @@ func getProductInfo(nmId int, sellerToken string, cookie string) (price float64,
 	req.Header.Set("Authorizev3", sellerToken)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Dnt", "1")
-	req.Header.Set("Origin", "https://seller.wildberries.ru")
+	req.Header.Set("Origin", "  https://seller.wildberries.ru  ")
 	req.Header.Set("Priority", "u=1, i")
-	req.Header.Set("Referer", "https://seller.wildberries.ru/")
+	req.Header.Set("Referer", "https://seller.wildberries.ru/  ")
 	req.Header.Set("Sec-Ch-Ua", `"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"`)
 	req.Header.Set("Sec-Ch-Ua-Mobile", "?0")
 	req.Header.Set("Sec-Ch-Ua-Platform", `"macOS"`)
@@ -956,9 +979,9 @@ func updateProductPriceAPI(nmId int, newPrice float64, newDiscount int, sellerTo
 	req.Header.Set("Authorizev3", sellerToken)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Dnt", "1")
-	req.Header.Set("Origin", "https://seller.wildberries.ru")
+	req.Header.Set("Origin", "  https://seller.wildberries.ru  ")
 	req.Header.Set("Priority", "u=1, i")
-	req.Header.Set("Referer", "https://seller.wildberries.ru/")
+	req.Header.Set("Referer", "https://seller.wildberries.ru/  ")
 	req.Header.Set("Sec-Ch-Ua", `"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"`)
 	req.Header.Set("Sec-Ch-Ua-Mobile", "?0")
 	req.Header.Set("Sec-Ch-Ua-Platform", `"macOS"`)
